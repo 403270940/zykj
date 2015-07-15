@@ -20,7 +20,6 @@ public class WZUtil implements IXposedHookLoadPackage{
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam loadPackageParam) throws Throwable {
         if ( loadPackageParam.packageName.equals("com.liyongyue.getinfo") ){
         try{
-            ConfigUtil.init();
             Class<?> classBuild = XposedHelpers.findClass("android.os.Build", loadPackageParam.classLoader);
             String saveModel        = ConfigUtil.get("MODEL");
             String saveManufacutrer = ConfigUtil.get("MANU");
@@ -102,34 +101,31 @@ public class WZUtil implements IXposedHookLoadPackage{
                     Log.e("input after hook", param.getResult().toString());
                 }
             });
-            Class<?> classLocationListener = XposedHelpers.findClass("android.location.LocationListener", loadPackageParam.classLoader);
-            XposedHelpers.findAndHookMethod(classLocationListener, "onLocationChanged", android.location.Location.class,new XC_MethodHook() {
-                @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-                @Override
-                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                    Log.e("input loc before",param.args[0].toString());
-                    String saveValue = ConfigUtil.get("GPS");
-                    if (!saveValue.equals("null")  && !saveValue.equals("")){
-                        String[] gps = saveValue.split(",");
-                        double lat = Double.valueOf(gps[0]);
-                        double lon = Double.valueOf(gps[1]);
-                        Location location = new Location(LocationManager.GPS_PROVIDER);
-                        location.setLatitude(lat);
-                        location.setLongitude(lon);
-                        location.setAccuracy(70);
-                        location.setElapsedRealtimeNanos(SystemClock.elapsedRealtimeNanos());
-                        param.args[0] = location;
-                    }
-                    Log.e("input loc after",param.args[0].toString());
-                }
-
-            });
-
-
+//            Class<?> classLocationListener = XposedHelpers.findClass("android.location.LocationListener", loadPackageParam.classLoader);
+//            XposedHelpers.findAndHookMethod(classLocationListener, "onLocationChanged", android.location.Location.class,new XC_MethodHook() {
+//                @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+//                @Override
+//                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+//                    Log.e("input loc before",param.args[0].toString());
+//                    String saveValue = ConfigUtil.get("GPS");
+//                    if (!saveValue.equals("null")  && !saveValue.equals("")){
+//                        String[] gps = saveValue.split(",");
+//                        double lat = Double.valueOf(gps[0]);
+//                        double lon = Double.valueOf(gps[1]);
+//                        Location location = new Location(LocationManager.GPS_PROVIDER);
+//                        location.setLatitude(lat);
+//                        location.setLongitude(lon);
+//                        location.setAccuracy(70);
+//                        location.setElapsedRealtimeNanos(SystemClock.elapsedRealtimeNanos());
+//                        param.args[0] = location;
+//                    }
+//                    Log.e("input loc after",param.args[0].toString());
+//                }
+//
+//            });
         }catch (Exception e){
             Log.e("input","HOOK Error",e);
         }
-
     }
     }
 }

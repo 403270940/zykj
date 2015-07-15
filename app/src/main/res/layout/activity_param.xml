@@ -1,0 +1,271 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.liyongyue.getinfo.Param"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:text="IMEI:"
+            android:id="@+id/IMEITextView"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:textStyle="bold"
+            android:layout_weight="0.50"
+            android:gravity="center_vertical" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_weight="5"
+            android:id="@+id/IMEIEditText" />
+
+        <Button
+            android:layout_width="70dp"
+            android:layout_height="fill_parent"
+            android:text="随机"
+            android:id="@+id/IMEIButton" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:text="MAC:"
+            android:id="@+id/MACTextView"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:textStyle="bold"
+            android:layout_weight="0.50"
+            android:gravity="center_vertical" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_weight="5"
+            android:id="@+id/MACEditText" />
+
+        <Button
+            android:layout_width="70dp"
+            android:layout_height="fill_parent"
+            android:text="随机"
+            android:id="@+id/MACButton" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:text="IMSI:"
+            android:id="@+id/IMSITextView"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:textStyle="bold"
+            android:layout_weight="0.50"
+            android:gravity="center_vertical" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_weight="5"
+            android:id="@+id/IMSIEditText" />
+
+        <Button
+            android:layout_width="70dp"
+            android:layout_height="fill_parent"
+            android:text="随机"
+            android:id="@+id/IMSIButton" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:text="厂商:"
+            android:id="@+id/CSTextView"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:textStyle="bold"
+            android:layout_weight="0.50"
+            android:gravity="center_vertical" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_weight="5"
+            android:id="@+id/CSEditText" />
+
+        <Button
+            android:layout_width="70dp"
+            android:layout_height="fill_parent"
+            android:text="随机"
+            android:id="@+id/CSButton" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_gravity="center_horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:text="型号:"
+            android:id="@+id/XHTextView"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:textStyle="bold"
+            android:layout_weight="0.50"
+            android:gravity="center_vertical" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_weight="5"
+            android:id="@+id/XHEditText" />
+
+        <Button
+            android:layout_width="70dp"
+            android:layout_height="fill_parent"
+            android:text="随机"
+            android:id="@+id/XHButton" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:text="安卓ID:"
+            android:id="@+id/IDTextView"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:textStyle="bold"
+            android:layout_weight="0.50"
+            android:gravity="center_vertical" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_weight="5"
+            android:id="@+id/IDEditText" />
+
+        <Button
+            android:layout_width="70dp"
+            android:layout_height="fill_parent"
+            android:text="随机"
+            android:id="@+id/IDButton" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:text="GPS:"
+            android:id="@+id/GPSTextView"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:textStyle="bold"
+            android:layout_weight="0.50"
+            android:gravity="center_vertical" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_weight="5"
+            android:id="@+id/GPSEditText" />
+
+        <Button
+            android:layout_width="70dp"
+            android:layout_height="fill_parent"
+            android:text="随机"
+            android:id="@+id/GPSButton" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="确定"
+            android:id="@+id/OKButton" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="取消"
+            android:id="@+id/CancelButton" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="全部随机"
+            android:id="@+id/ALLRandomButton" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="服务器获取"
+            android:id="@+id/ServerGetButton" />
+    </LinearLayout>
+
+
+
+</LinearLayout>

@@ -1,5 +1,6 @@
 package com.liyongyue.zykj;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -12,6 +13,12 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Intent intent = new Intent(MainActivity.this,Param.class);
+        startActivity(intent);
+        //如果不关闭当前的会出现好多个页面
+        MainActivity.this.finish();
+
     }
 
     @Override

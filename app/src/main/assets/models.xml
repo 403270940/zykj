@@ -1,0 +1,20 @@
+<models>
+    <model>
+        <changshang>SUMSUNG</changshang>
+        <xinghao>GT-I9508</xinghao>
+        <xinghao>GT-I9502</xinghao>
+        <xinghao>GT-I9503</xinghao>
+        <xinghao>GT-I9505</xinghao>
+        <xinghao>GT-I9208</xinghao>
+        <xinghao>GT-I9501</xinghao>
+    </model>
+    <model>
+        <changshang>XIAOMI</changshang>
+        <xinghao>4</xinghao>
+        <xinghao>1</xinghao>
+        <xinghao>2</xinghao>
+        <xinghao>3</xinghao>
+        <xinghao>mini</xinghao>
+        <xinghao>mini2</xinghao>
+    </model>
+</models>
