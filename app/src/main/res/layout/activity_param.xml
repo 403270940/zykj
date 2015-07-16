@@ -110,13 +110,14 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp" >
+        android:layout_marginBottom="10dp"
+        android:layout_gravity="center_horizontal">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
-            android:text="厂商:"
-            android:id="@+id/CSTextView"
+            android:text="型号:"
+            android:id="@+id/ModelTextView"
             android:minHeight="0dp"
             android:minWidth="0dp"
             android:textStyle="bold"
@@ -127,13 +128,13 @@
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:layout_weight="5"
-            android:id="@+id/CSEditText" />
+            android:id="@+id/ModelEditText" />
 
         <Button
             android:layout_width="70dp"
             android:layout_height="fill_parent"
             android:text="随机"
-            android:id="@+id/CSButton" />
+            android:id="@+id/ModelButton" />
     </LinearLayout>
 
     <LinearLayout
@@ -143,14 +144,13 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp"
-        android:layout_gravity="center_horizontal">
+        android:layout_marginBottom="10dp" >
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
-            android:text="型号:"
-            android:id="@+id/XHTextView"
+            android:text="版本:"
+            android:id="@+id/VersionTextView"
             android:minHeight="0dp"
             android:minWidth="0dp"
             android:textStyle="bold"
@@ -161,13 +161,13 @@
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:layout_weight="5"
-            android:id="@+id/XHEditText" />
+            android:id="@+id/VersionEditText" />
 
         <Button
             android:layout_width="70dp"
             android:layout_height="fill_parent"
             android:text="随机"
-            android:id="@+id/XHButton" />
+            android:id="@+id/VersionButton" />
     </LinearLayout>
 
     <LinearLayout

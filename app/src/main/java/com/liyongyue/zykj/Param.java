@@ -13,15 +13,15 @@ public class Param extends ActionBarActivity {
     String IMEI = "";
     String MAC = "";
     String IMSI = "";
-    String CS = "";
-    String XH = "";
+    String VERSION = "";
+    String MODEL = "";
     String ID = "";
     String GPS = "";
     private Button IMEIButton = null;
     private Button MACButton = null;
     private Button IMSIButton = null;
-    private Button CSButton = null;
-    private Button XHButton = null;
+    private Button VersionButton = null;
+    private Button ModelButton = null;
     private Button IDButton = null;
     private Button GPSButton = null;
     private Button OKButton = null;
@@ -31,8 +31,8 @@ public class Param extends ActionBarActivity {
     private EditText IMEIEditText = null;
     private EditText MACEditText = null;
     private EditText IMSIEditText = null;
-    private EditText CSEditText = null;
-    private EditText XHEditText = null;
+    private EditText VersionEditText = null;
+    private EditText ModelEditText = null;
     private EditText IDEditText = null;
     private EditText GPSEditText = null;
 
@@ -43,8 +43,8 @@ public class Param extends ActionBarActivity {
         IMEIButton = (Button)findViewById(R.id.IMEIButton);
         MACButton = (Button)findViewById(R.id.MACButton);
         IMSIButton = (Button)findViewById(R.id.IMSIButton);
-        CSButton = (Button)findViewById(R.id.CSButton);
-        XHButton = (Button)findViewById(R.id.XHButton);
+        VersionButton = (Button)findViewById(R.id.VersionButton);
+        ModelButton = (Button)findViewById(R.id.ModelButton);
         IDButton = (Button)findViewById(R.id.IDButton);
         GPSButton = (Button)findViewById(R.id.GPSButton);
 
@@ -57,8 +57,8 @@ public class Param extends ActionBarActivity {
         IMEIEditText = (EditText)findViewById(R.id.IMEIEditText);
         MACEditText = (EditText)findViewById(R.id.MACEditText);
         IMSIEditText = (EditText)findViewById(R.id.IMSIEditText);
-        CSEditText = (EditText)findViewById(R.id.CSEditText);
-        XHEditText = (EditText)findViewById(R.id.XHEditText);
+        VersionEditText = (EditText)findViewById(R.id.VersionEditText);
+        ModelEditText = (EditText)findViewById(R.id.ModelEditText);
         IDEditText = (EditText)findViewById(R.id.IDEditText);
         GPSEditText = (EditText)findViewById(R.id.GPSEditText);
 
@@ -81,19 +81,19 @@ public class Param extends ActionBarActivity {
                         IMSIEditText.setText(IMSI);
                         break;
 
-                    case R.id.CSButton:
-                        CS = ConfigUtil.getRandomCH();
-                        CSEditText.setText(CS);
+                    case R.id.VersionButton:
+                        VERSION = ConfigUtil.getRandomVersion();
+                        VersionEditText.setText(VERSION);
                         break;
 
-                    case R.id.XHButton:
-                        XH = ConfigUtil.getRandomXH();
-                        XHEditText.setText(XH);
+                    case R.id.ModelButton:
+                        MODEL = ConfigUtil.getRandomModel();
+                        ModelEditText.setText(MODEL);
                         break;
 
                     case R.id.IDButton:
                         ID = ConfigUtil.getRandomID();
-                        XHEditText.setText(ID);
+                        IDEditText.setText(ID);
                         break;
 
                     case R.id.GPSButton:
@@ -113,12 +113,12 @@ public class Param extends ActionBarActivity {
                         IMEI = ConfigUtil.getRandomIMEI();
                         MAC = ConfigUtil.getRandomMAC();
                         IMSI = ConfigUtil.getRandomIMSI();
-                        CS = ConfigUtil.getRandomCH();
-                        XH = ConfigUtil.getRandomXH();
+                        VERSION = ConfigUtil.getRandomVersion();
+                        MODEL = ConfigUtil.getRandomModel();
                         ID = ConfigUtil.getRandomID();
-                        XHEditText.setText(ID);
-                        XHEditText.setText(XH);
-                        CSEditText.setText(CS);
+                        IDEditText.setText(ID);
+                        ModelEditText.setText(MODEL);
+                        VersionEditText.setText(VERSION);
                         IMSIEditText.setText(IMSI);
                         MACEditText.setText(MAC);
                         IMEIEditText.setText(IMEI);
@@ -138,8 +138,8 @@ public class Param extends ActionBarActivity {
         IMEIButton.setOnClickListener(onClickListener);
         MACButton.setOnClickListener(onClickListener);
         IMSIButton.setOnClickListener(onClickListener);
-        CSButton.setOnClickListener(onClickListener);
-        XHButton.setOnClickListener(onClickListener);
+        VersionButton.setOnClickListener(onClickListener);
+        ModelButton.setOnClickListener(onClickListener);
         GPSButton.setOnClickListener(onClickListener);
         IDButton.setOnClickListener(onClickListener);
         AllRandomButton.setOnClickListener(onClickListener);
@@ -155,8 +155,8 @@ public class Param extends ActionBarActivity {
         IMEIEditText.setText(ConfigUtil.get("IMEI"));
         MACEditText.setText(ConfigUtil.get("MAC"));
         IMSIEditText.setText(ConfigUtil.get("IMSI"));
-        CSEditText.setText(ConfigUtil.get("MANU"));
-        XHEditText.setText(ConfigUtil.get("MODEL"));
+        VersionEditText.setText(ConfigUtil.get("VERSION"));
+        ModelEditText.setText(ConfigUtil.get("MANU") + " " +ConfigUtil.get("MODEL"));
         IDEditText.setText(ConfigUtil.get("ANDROIDID"));
         GPSEditText.setText(ConfigUtil.get("GPS"));
     }
@@ -164,8 +164,8 @@ public class Param extends ActionBarActivity {
         IMEI = IMEIEditText.getText().toString();
         MAC = MACEditText.getText().toString();
         IMSI = IMSIEditText.getText().toString();
-        CS = CSEditText.getText().toString();
-        XH = XHEditText.getText().toString();
+        VERSION = VersionEditText.getText().toString();
+        MODEL = ModelEditText.getText().toString();
         GPS = GPSEditText.getText().toString();
         ID = IDEditText.getText().toString();
         if(!ValidationUtil.check("IMEI",IMEI)){
@@ -180,11 +180,11 @@ public class Param extends ActionBarActivity {
             Toast.makeText(this,"IMSI格式错误",Toast.LENGTH_SHORT);
             return false;
         }
-        if(!ValidationUtil.check("MANU",CS)){
+        if(!ValidationUtil.check("VERSION", VERSION)){
             Toast.makeText(this,"厂商格式错误",Toast.LENGTH_SHORT);
             return false;
         }
-        if(!ValidationUtil.check("MODEL",XH)){
+        if(!ValidationUtil.check("MODEL", MODEL)){
             Toast.makeText(this,"型号格式错误",Toast.LENGTH_SHORT);
             return false;
         }
@@ -197,7 +197,7 @@ public class Param extends ActionBarActivity {
             return false;
         }
 
-        boolean result = ConfigUtil.addParams(IMEI,MAC,IMSI,CS,XH,ID,GPS);
+        boolean result = ConfigUtil.addParams(IMEI,MAC,IMSI, VERSION, MODEL,ID,GPS);
         return result;
     }
 

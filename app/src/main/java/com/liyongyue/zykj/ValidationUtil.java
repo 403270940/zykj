@@ -30,6 +30,12 @@ public class ValidationUtil {
         if(key.equals("IMSI")){
             pattern = Pattern.compile(IMSIReg);
         }
+        if(key.equals("IMSI")){
+           return true;
+        }
+        if(key.equals("VERSION")){
+            return true;
+        }
         if(key.equals("MANU")){
             return true;
         }
@@ -39,9 +45,11 @@ public class ValidationUtil {
         if(key.equals("ANDROIDID")){
             pattern = Pattern.compile(IDReg);
         }
-        if(key.equals("GPS")){
+        if(key.equals("GPS")) {
             return isGPS(result);
         }
+        if(pattern == null)
+            return false;
         Matcher matcher = pattern.matcher(result);
         if(matcher.find())return true;
         else return false;

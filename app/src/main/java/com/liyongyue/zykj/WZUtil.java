@@ -19,24 +19,27 @@ public class WZUtil implements IXposedHookLoadPackage{
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam loadPackageParam) throws Throwable {
         if ( loadPackageParam.packageName.equals("com.liyongyue.getinfo") ){
+            Log.e("input hook","enter hook");
         try{
             Class<?> classBuild = XposedHelpers.findClass("android.os.Build", loadPackageParam.classLoader);
             String saveModel        = ConfigUtil.get("MODEL");
             String saveManufacutrer = ConfigUtil.get("MANU");
-            String saveBrand = ConfigUtil.get("BRAND");
+            String saveVersion = ConfigUtil.get("VERSION");
             if (!saveManufacutrer.equals("null") && !saveManufacutrer.equals("")) XposedHelpers.setStaticObjectField(classBuild, "MANUFACTURER", saveManufacutrer);
-            if (!saveModel.equals("null") && !saveModel.equals("")) XposedHelpers.setStaticObjectField(classBuild, "MODEL", saveModel);
-            if (!saveBrand.equals("null") && !saveBrand.equals("")) XposedHelpers.setStaticObjectField(classBuild, "BRAND", saveBrand);
-
+            if (!saveModel.equals("null") && !saveModel.equals("")) {
+                XposedHelpers.setStaticObjectField(classBuild, "MODEL", saveModel);
+                XposedHelpers.setStaticObjectField(classBuild, "BRAND", saveModel);
+            }
+            if (!saveVersion.equals("null") && !saveVersion.equals("")) XposedHelpers.setStaticObjectField(classBuild, "DISPLAY", saveVersion);
 //            Class<?> classSetting = XposedHelpers.findClass("android.provider.Setting.System",loadPackageParam.classLoader);
 //            String saveAndroidId = "1234567890abcdef";//len is 16
 //            if (!saveAndroidId.equals("null") && !saveAndroidId.equals("")) XposedHelpers.setStaticObjectField(classSetting, "ANDROID_ID", saveAndroidId);
 
-            Class<?> classVERSION = XposedHelpers.findClass("android.os.Build.VERSION",loadPackageParam.classLoader);
-            String saveSDK = ConfigUtil.get("SDK");
-            String saveVersion = ConfigUtil.get("VERSION");
-            if (!saveSDK.equals("null") && !saveSDK.equals("")) XposedHelpers.setStaticObjectField(classVERSION, "SDK", saveSDK);
-            if (!saveVersion.equals("null") && !saveVersion.equals("")) XposedHelpers.setStaticObjectField(classVERSION, "RELEASE", saveVersion);
+//            Class<?> classVERSION = XposedHelpers.findClass("android.os.Build.VERSION",loadPackageParam.classLoader);
+//            String saveSDK = ConfigUtil.get("SDK");
+//            String saveVersion = ConfigUtil.get("VERSION");
+//            if (!saveSDK.equals("null") && !saveSDK.equals("")) XposedHelpers.setStaticObjectField(classVERSION, "SDK", saveSDK);
+//            if (!saveVersion.equals("null") && !saveVersion.equals("")) XposedHelpers.setStaticObjectField(classVERSION, "RELEASE", saveVersion);
 
             Class<?> classTelephonyManager = XposedHelpers.findClass("android.telephony.TelephonyManager", loadPackageParam.classLoader);
             Class<?> classWifiInfo         = XposedHelpers.findClass("android.net.wifi.WifiInfo", loadPackageParam.classLoader);
@@ -71,7 +74,7 @@ public class WZUtil implements IXposedHookLoadPackage{
                 @Override
                 protected void afterHookedMethod(MethodHookParam param) throws Throwable
                 {
-                    if(param.getResult() != null)
+                    if(param.getResult() != null&&param!=null)
                         Log.e("input loc before",param.getResult().toString());
                     else
                         Log.e("input loc before","location is null");
@@ -87,7 +90,8 @@ public class WZUtil implements IXposedHookLoadPackage{
                         location.setElapsedRealtimeNanos(SystemClock.elapsedRealtimeNanos());
                         param.setResult(location);
                     }
-                    Log.e("input loc after",param.getResult().toString());
+                    if(param.getResult() != null&&param!=null)
+                        Log.e("input loc after",param.getResult().toString());
                     super.afterHookedMethod(param);
                 }
             });
