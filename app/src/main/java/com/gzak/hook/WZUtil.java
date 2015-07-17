@@ -1,6 +1,7 @@
 package com.gzak.hook;
 
 import android.annotation.TargetApi;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
@@ -58,6 +59,16 @@ public class WZUtil implements IXposedHookLoadPackage{
                 }
             });
 
+            XposedHelpers.findAndHookMethod(classTelephonyManager, "getSubscriberId", new XC_MethodHook()
+            {
+                @Override
+                protected void afterHookedMethod(MethodHookParam param) throws Throwable
+                {
+                    String saveValue = ConfigUtil.get("IMSI");
+                    if (!saveValue.equals("null") && !saveValue.equals("")) param.setResult(saveValue);
+                    super.afterHookedMethod(param);
+                }
+            });
 
             XposedHelpers.findAndHookMethod(classWifiInfo, "getMacAddress", new XC_MethodHook()
             {

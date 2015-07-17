@@ -95,6 +95,8 @@ public class ConfigUtil {
         return true;
     }
 
+
+
     public static void outModel(){
         for(String model : modelList){
             Log.e("input","model:"+ model);
