@@ -15,8 +15,9 @@ public class Parameter {
     String MODEL;
     String PHONE;
     String SDK;
+    String ANDROIDID;
 
-    public Parameter(String IMEI, String MAC, String IMSI, String MANU, String MODEL, String PHONE, String SDK) {
+    public Parameter(String IMEI, String MAC, String IMSI, String MANU, String MODEL, String PHONE, String SDK,String ANDROIDID) {
         this.IMEI = IMEI;
         this.MAC = MAC;
         this.IMSI = IMSI;
@@ -24,6 +25,7 @@ public class Parameter {
         this.MODEL = MODEL;
         this.PHONE = PHONE;
         this.SDK = SDK;
+        this.ANDROIDID = ANDROIDID;
     }
 
     public String getSDK() {
@@ -80,5 +82,13 @@ public class Parameter {
 
     public void setPHONE(String PHONE) {
         this.PHONE = PHONE;
+    }
+
+    public String getANDROIDID() {
+        return ANDROIDID;
+    }
+
+    public void setANDROIDID(String ANDROIDID) {
+        this.ANDROIDID = ANDROIDID;
     }
 }

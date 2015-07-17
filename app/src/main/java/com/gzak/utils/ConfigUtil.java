@@ -9,6 +9,8 @@ import android.graphics.AvoidXfermode;
 import android.os.Environment;
 import android.util.Log;
 
+import com.gzak.entities.Parameter;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -166,11 +168,37 @@ public class ConfigUtil {
         File file = new File(propertyFileName);
         try {
             FileOutputStream fos = new FileOutputStream(file,false);
-            properties.store(fos,"");
+            properties.store(fos, "");
         } catch (Exception e) {
             Log.e("input","",e);
             Log.e("input", "", e);
         }
+        return true;
+    }
+
+
+    public static boolean addParams(Parameter parameter){
+//        Log.e("input add","IMEI:" + IMEI);
+//        Log.e("input add","MAC:" + MAC);
+//        Log.e("input add","IMSI:" + IMSI);
+//        Log.e("input add","VERSION:" + VERSION);
+//        Log.e("input add", "MODEL:" + MODEL);
+//        Log.e("input add", "ANDROIDID:" + ID);
+//        Log.e("input add", "GPS:" + GPS);
+        String[] modelArray = parameter.getMODEL().split(" ");
+        String MANU = modelArray[0].trim();
+        String XH = modelArray[1].trim();
+        if(properties==null)
+            properties = new Properties();
+        properties.setProperty("IMEI", parameter.getIMEI());
+        properties.setProperty("MAC",parameter.getMAC());
+        properties.setProperty("IMSI",parameter.getIMSI());
+        properties.setProperty("MANU",parameter.getMANU());
+        properties.setProperty("MODEL",parameter.getMODEL());
+        properties.setProperty("ANDROIDID",parameter.getANDROIDID());
+        properties.setProperty("PHONE",parameter.getPHONE());
+        properties.setProperty("SDK",parameter.getSDK());
+        saveProperties();
         return true;
     }
 
