@@ -1,6 +1,12 @@
 package com.gzak.utils;
 
 import android.os.Environment;
+
+import android.content.Context;
+import android.content.res.AssetManager;
+import android.content.res.XmlResourceParser;
+import android.graphics.AvoidXfermode;
+import android.os.Environment;
 import android.util.Log;
 
 import org.jsoup.Jsoup;
@@ -45,10 +51,13 @@ public class ConfigUtil {
             loadMobile();
             initProperties();
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e("input","",e);
         }
     }
 
+    public static void setProperties(Properties properties){
+        ConfigUtil.properties = properties;
+    }
     private static boolean initProperties(){
         try {
             File  file = new File(propertyFileName);
@@ -66,7 +75,11 @@ public class ConfigUtil {
         return false;
     }
 
+
 //    public static void bianliProperties(Properties properties){
+
+//
+//    public static void bianli(){
 //        Enumeration enu2=properties.propertyNames();
 //        while(enu2.hasMoreElements()){
 //            String key = (String)enu2.nextElement();
@@ -130,8 +143,7 @@ public class ConfigUtil {
         String result = "";
         try {
             if(properties==null||properties.isEmpty()){
-                boolean initResult = initProperties();
-                if(initResult == false)return "";
+                return "";
             }
 
             result = (String)properties.get(key);
@@ -144,7 +156,6 @@ public class ConfigUtil {
             if(!ValidationUtil.check(key, result))
                 result = "";
         }catch (Exception e){
-            e.printStackTrace();
             Log.e("input e", "error",e);
         }
 
@@ -158,18 +169,19 @@ public class ConfigUtil {
             properties.store(fos,"");
         } catch (Exception e) {
             Log.e("input","",e);
+            Log.e("input", "", e);
         }
         return true;
     }
 
     public static boolean addParams(String IMEI,String MAC,String IMSI,String VERSION,String MODEL,String ID,String GPS){
-        Log.e("input add","IMEI:" + IMEI);
-        Log.e("input add","MAC:" + MAC);
-        Log.e("input add","IMSI:" + IMSI);
-        Log.e("input add","VERSION:" + VERSION);
-        Log.e("input add", "MODEL:" + MODEL);
-        Log.e("input add", "ANDROIDID:" + ID);
-        Log.e("input add", "GPS:" + GPS);
+//        Log.e("input add","IMEI:" + IMEI);
+//        Log.e("input add","MAC:" + MAC);
+//        Log.e("input add","IMSI:" + IMSI);
+//        Log.e("input add","VERSION:" + VERSION);
+//        Log.e("input add", "MODEL:" + MODEL);
+//        Log.e("input add", "ANDROIDID:" + ID);
+//        Log.e("input add", "GPS:" + GPS);
         String[] modelArray = MODEL.split(" ");
         String MANU = modelArray[0].trim();
         String XH = modelArray[1].trim();
@@ -219,7 +231,7 @@ public class ConfigUtil {
 //        String preYD2 = "46002";
 //        String preLT = "46001";
 //        String preDX = "46003";
-        String result = pre+getRandomString("0123",1) + getRandomString(GlobalValue.num,12);
+        String result = pre+getRandomString("0123",1) + getRandomString(GlobalValue.num,10);
         return result;
     }
 
