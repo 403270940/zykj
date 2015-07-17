@@ -1,4 +1,4 @@
-package com.liyongyue.zykj;
+package com.gzak.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -6,6 +6,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.gzak.utils.ConfigUtil;
+import com.gzak.utils.ValidationUtil;
 
 
 public class Param extends ActionBarActivity {
@@ -116,6 +119,8 @@ public class Param extends ActionBarActivity {
                         VERSION = ConfigUtil.getRandomVersion();
                         MODEL = ConfigUtil.getRandomModel();
                         ID = ConfigUtil.getRandomID();
+                        GPS = ConfigUtil.getRandomGPS();
+                        GPSEditText.setText(GPS);
                         IDEditText.setText(ID);
                         ModelEditText.setText(MODEL);
                         VersionEditText.setText(VERSION);
@@ -168,32 +173,32 @@ public class Param extends ActionBarActivity {
         MODEL = ModelEditText.getText().toString();
         GPS = GPSEditText.getText().toString();
         ID = IDEditText.getText().toString();
-        if(!ValidationUtil.check("IMEI",IMEI)){
-            Toast.makeText(this, "IMEI¸ñÊ½´íÎó", Toast.LENGTH_SHORT);
+        if(!ValidationUtil.check("IMEI", IMEI)){
+            Toast.makeText(this, "IMEIï¿½ï¿½Ê½ï¿½ï¿½ï¿½ï¿½", Toast.LENGTH_SHORT);
             return false;
         }
         if(!ValidationUtil.check("MAC",MAC)){
-            Toast.makeText(this,"MAC¸ñÊ½´íÎó",Toast.LENGTH_SHORT);
+            Toast.makeText(this,"MACï¿½ï¿½Ê½ï¿½ï¿½ï¿½ï¿½",Toast.LENGTH_SHORT);
             return false;
         }
         if(!ValidationUtil.check("IMSI",IMSI)){
-            Toast.makeText(this,"IMSI¸ñÊ½´íÎó",Toast.LENGTH_SHORT);
+            Toast.makeText(this,"IMSIï¿½ï¿½Ê½ï¿½ï¿½ï¿½ï¿½",Toast.LENGTH_SHORT);
             return false;
         }
         if(!ValidationUtil.check("VERSION", VERSION)){
-            Toast.makeText(this,"³§ÉÌ¸ñÊ½´íÎó",Toast.LENGTH_SHORT);
+            Toast.makeText(this,"ï¿½ï¿½ï¿½Ì¸ï¿½Ê½ï¿½ï¿½ï¿½ï¿½",Toast.LENGTH_SHORT);
             return false;
         }
         if(!ValidationUtil.check("MODEL", MODEL)){
-            Toast.makeText(this,"ÐÍºÅ¸ñÊ½´íÎó",Toast.LENGTH_SHORT);
+            Toast.makeText(this,"ï¿½ÍºÅ¸ï¿½Ê½ï¿½ï¿½ï¿½ï¿½",Toast.LENGTH_SHORT);
             return false;
         }
         if(!ValidationUtil.check("ANDROIDID",ID)){
-            Toast.makeText(this,"ID¸ñÊ½´íÎó",Toast.LENGTH_SHORT);
+            Toast.makeText(this,"IDï¿½ï¿½Ê½ï¿½ï¿½ï¿½ï¿½",Toast.LENGTH_SHORT);
             return false;
         }
         if(!ValidationUtil.check("GPS",GPS)){
-            Toast.makeText(this,"GPS¸ñÊ½´íÎó",Toast.LENGTH_SHORT);
+            Toast.makeText(this,"GPSï¿½ï¿½Ê½ï¿½ï¿½ï¿½ï¿½",Toast.LENGTH_SHORT);
             return false;
         }
 

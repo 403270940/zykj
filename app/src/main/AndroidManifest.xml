@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.liyongyue.zykj" >
-
+    package="com.gzak.activities" >
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -11,7 +11,7 @@
         <meta-data android:name="xposeddescription" android:value="这个可以伪装手机软件显示的手机型号" />
         <meta-data android:name="xposedminversion"  android:value="42+" />
         <activity
-            android:name=".MainActivity"
+            android:name="com.gzak.activities.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,7 +21,7 @@
         </activity>
 
         <activity
-            android:name=".Param"
+            android:name="com.gzak.activities.Param"
             android:label="@string/title_activity_param" >
         </activity>
 

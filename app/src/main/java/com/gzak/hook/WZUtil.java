@@ -1,4 +1,4 @@
-package com.liyongyue.zykj;
+package com.gzak.hook;
 
 import android.annotation.TargetApi;
 import android.location.Location;
@@ -6,6 +6,8 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.SystemClock;
 import android.util.Log;
+
+import com.gzak.utils.ConfigUtil;
 
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;

@@ -1,8 +1,5 @@
-package com.liyongyue.zykj;
+package com.gzak.utils;
 
-import android.content.res.AssetManager;
-import android.content.res.XmlResourceParser;
-import android.graphics.AvoidXfermode;
 import android.os.Environment;
 import android.util.Log;
 
@@ -14,25 +11,21 @@ import org.jsoup.select.Elements;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
-import java.util.Set;
 
 /**
  * Created by Administrator on 2015/7/6.
  */
 public class ConfigUtil {
 
-    private static final String propertyFileName = Environment.getDataDirectory() + "/data/com.liyongyue.zykj/config.properties";
+    private static final String propertyFileName = Environment.getExternalStorageDirectory() + "/config.properties";
     private static Properties properties = null;
     private static HashMap<String,String> modelMap = null;
     private static ArrayList<String> modelList = null;
@@ -58,30 +51,28 @@ public class ConfigUtil {
 
     private static boolean initProperties(){
         try {
-
             File  file = new File(propertyFileName);
             if(file.exists()){
                 properties = new Properties();
                 properties.load(new FileInputStream(file));
-                bianli();
                 Log.e("input file", "file exist");
                 return true;
             }else{
                 Log.e("input file","can not find file");
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e("input", "", e);
         }
         return false;
     }
 
-    public static void bianli(){
-        Enumeration enu2=properties.propertyNames();
-        while(enu2.hasMoreElements()){
-            String key = (String)enu2.nextElement();
-            Log.e("input properties","key:"+key);
-        }
-    }
+//    public static void bianliProperties(Properties properties){
+//        Enumeration enu2=properties.propertyNames();
+//        while(enu2.hasMoreElements()){
+//            String key = (String)enu2.nextElement();
+//            Log.e("input properties","key:"+key);
+//        }
+//    }
 
     private static boolean loadMobile(){
         String modelFileName = "/assets/models.xml";
@@ -99,7 +90,7 @@ public class ConfigUtil {
             }
             Log.e("input xml",doc.outerHtml());
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e("input", "", e);
         }
         return true;
     }
@@ -133,7 +124,6 @@ public class ConfigUtil {
 
 
     public static String get(String key){
-        bianli();
         Log.e("input get","key:"+key);
         String result = "";
         try {
@@ -145,18 +135,15 @@ public class ConfigUtil {
             result = (String)properties.get(key);
             if(result == null || result.equals("null")){
                 Log.e("input null", key);
-                Log.e("input null",result);
                 return "";
             }
             Log.e("input key", key);
-            Log.e("input value",result);
-            if(!ValidationUtil.check(key,result))
+            Log.e("input value", result);
+            if(!ValidationUtil.check(key, result))
                 result = "";
         }catch (Exception e){
             e.printStackTrace();
             Log.e("input e", "error",e);
-            Log.e("input e", key);
-            Log.e("input e",result);
         }
 
         return result;
@@ -168,7 +155,7 @@ public class ConfigUtil {
             FileOutputStream fos = new FileOutputStream(file,false);
             properties.store(fos,"");
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e("input","",e);
         }
         return true;
     }
@@ -196,17 +183,6 @@ public class ConfigUtil {
         properties.setProperty("GPS",GPS);
         saveProperties();
         return true;
-    }
-
-    private static String getRandomString(int length) {
-        String base = "0123456789";
-        Random random = new Random();
-        StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < length; i++) {
-            int number = random.nextInt(base.length());
-            sb.append(base.charAt(number));
-        }
-        return sb.toString();
     }
 
     public static String getRandomString(String base, int length){

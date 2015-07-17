@@ -1,4 +1,4 @@
-package com.liyongyue.zykj;
+package com.gzak.activities;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

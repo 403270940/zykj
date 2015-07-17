@@ -1,4 +1,4 @@
-package com.liyongyue.zykj;
+package com.gzak.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,7 +16,6 @@ public class MainActivity extends ActionBarActivity {
 
         Intent intent = new Intent(MainActivity.this,Param.class);
         startActivity(intent);
-        //如果不关闭当前的会出现好多个页面
         MainActivity.this.finish();
 
     }
