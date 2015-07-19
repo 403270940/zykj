@@ -1,6 +1,8 @@
 package com.gzak.activities;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.widget.Button;
@@ -10,6 +12,7 @@ import android.widget.Toast;
 
 import com.gzak.entities.Parameter;
 import com.gzak.utils.ConfigUtil;
+import com.gzak.utils.HttpUtil;
 import com.gzak.utils.ValidationUtil;
 
 
@@ -32,7 +35,54 @@ public class Param extends ActionBarActivity {
     private Button AllRandomButton = null;
     private Button ServerGetButton = null;
 
+    private Handler handler =new Handler(){
+        @Override
+        //当有消息发送出来的时候就执行Handler的这个方法
+        public void handleMessage(Message msg){
+            super.handleMessage(msg);
+            Parameter parameter = (Parameter)msg.obj;
+            if(parameter == null) {
+                showTextView.setText("get failed");
+                return;
+            }
+            IMEI = parameter.getIMEI();
+            MAC = parameter.getMAC();
+            IMSI = parameter.getIMSI();
+            VERSION = parameter.getVERSION();
+            MANU = parameter.getMANU();
+            MODEL = parameter.getMODEL();
+            ID = parameter.getANDROIDID();
+            GPS = parameter.getGPS();
+            IP = parameter.getIP();
+            PHONE = parameter.getPHONE();
+            String info = "";
+            info += "IMEI:"+IMEI +"\n";
+            info += "MAC:"+MAC +"\n";
+            info += "IMSI:"+IMSI +"\n";
+            info += "VERSION:"+VERSION +"\n";
+            info += "MANU:"+MANU +"\n";
+            info += "MODEL:"+MODEL +"\n";
+            info += "ID:"+ID +"\n";
+            info += "GPS:"+GPS +"\n";
+            info += "IP:"+IP +"\n";
+            info += "PHONE:"+PHONE;
 
+            showTextView.setText(info);
+
+//处理UI
+        }
+    };
+
+    Thread thread =  new Thread(){
+        @Override
+        public void run(){
+            Parameter parameter = ConfigUtil.getServerInfo();
+//            handler.sendEmptyMessage(0);
+            Message msg = new Message();
+            msg.obj = parameter;
+            handler.sendMessage(msg);
+        }
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -65,7 +115,8 @@ public class Param extends ActionBarActivity {
                         break;
 
                     case R.id.ServerGetButton:
-                        ConfigUtil.getServerInfo();
+//                        ConfigUtil.getServerInfo();
+                        thread.start();
                         break;
 
                 }

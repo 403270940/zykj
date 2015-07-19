@@ -135,7 +135,9 @@ public class ConfigUtil {
     public static Parameter getServerInfo(){
         //if get false return false
         //if format error return false
+        Parameter parameter = null;
         String result = HttpUtil.get();
+        Log.e("input","http result:"+result);
         if(result == null || result.equals("null"))return null;
         Response response = JSONUtil.getResponseFromJSON(result);
         if(response.getResultCode() != 0){
@@ -144,10 +146,10 @@ public class ConfigUtil {
             String model = response.getMODEL();
             String MANU = model.split(" ")[0].trim();
             String XH = model.split(" ")[1].trim();
-            Parameter parameter = new Parameter(response.getIMEI(),response.getMAC(),response.getIMSI(),MANU,XH,response.getVERSION(),response.getPHONE(),response.getANDROIDID(),response.getGPS(),response.getIP());
+            parameter = new Parameter(response.getIMEI(),response.getMAC(),response.getIMSI(),MANU,XH,response.getVERSION(),response.getPHONE(),response.getANDROIDID(),response.getGPS(),response.getIP());
         }
 //        outModel();
-        return null;
+        return parameter;
     }
 
 
@@ -165,10 +167,7 @@ public class ConfigUtil {
                 Log.e("input null", key);
                 return "";
             }
-            Log.e("input key", key);
-            Log.e("input value", result);
-            if(!ValidationUtil.check(key, result))
-                result = "";
+
         }catch (Exception e){
             Log.e("input e", "error",e);
         }
@@ -208,9 +207,7 @@ public class ConfigUtil {
 //        private String IP;
 //        private String PHONE;
 //        private String GPS;
-        String[] modelArray = parameter.getMODEL().split(" ");
-        String MANU = modelArray[0].trim();
-        String XH = modelArray[1].trim();
+
         if(properties==null)
             properties = new Properties();
         properties.setProperty("IMEI", parameter.getIMEI());
@@ -227,30 +224,42 @@ public class ConfigUtil {
         return true;
     }
 
-    public static boolean addParams(String IMEI,String MAC,String IMSI,String VERSION,String MODEL,String ID,String GPS){
-//        Log.e("input add","IMEI:" + IMEI);
-//        Log.e("input add","MAC:" + MAC);
-//        Log.e("input add","IMSI:" + IMSI);
-//        Log.e("input add","VERSION:" + VERSION);
-//        Log.e("input add", "MODEL:" + MODEL);
-//        Log.e("input add", "ANDROIDID:" + ID);
-//        Log.e("input add", "GPS:" + GPS);
-        String[] modelArray = MODEL.split(" ");
-        String MANU = modelArray[0].trim();
-        String XH = modelArray[1].trim();
-        if(properties==null)
-            properties = new Properties();
-        properties.setProperty("IMEI", IMEI);
-        properties.setProperty("MAC",MAC);
-        properties.setProperty("IMSI",IMSI);
-        properties.setProperty("MANU",MANU);
-        properties.setProperty("MODEL",XH);
-        properties.setProperty("ANDROIDID",ID);
-        properties.setProperty("VERSION",VERSION);
-        properties.setProperty("GPS",GPS);
-        saveProperties();
-        return true;
-    }
+//    public static boolean addParams(String IMEI,String MAC,String IMSI,String VERSION,String MODEL,String ID,String GPS){
+////        Log.e("input add","IMEI:" + IMEI);
+////        Log.e("input add","MAC:" + MAC);
+////        Log.e("input add","IMSI:" + IMSI);
+////        Log.e("input add","VERSION:" + VERSION);
+////        Log.e("input add", "MODEL:" + MODEL);
+////        Log.e("input add", "ANDROIDID:" + ID);
+////        Log.e("input add", "GPS:" + GPS);
+//        String[] modelArray = MODEL.split(" ");
+//        String MANU = modelArray[0].trim();
+//        String XH = modelArray[1].trim();
+//        if(properties==null)
+//            properties = new Properties();
+////        properties.setProperty("IMEI", parameter.getIMEI());
+////        properties.setProperty("MAC",parameter.getMAC());
+////        properties.setProperty("IMSI",parameter.getIMSI());
+////        properties.setProperty("MANU",parameter.getMANU());
+////        properties.setProperty("MODEL",parameter.getMODEL());
+////        properties.setProperty("ANDROIDID",parameter.getANDROIDID());
+////        properties.setProperty("VERSION",parameter.getVERSION());
+////        properties.setProperty("IP",parameter.getIP());
+////        properties.setProperty("PHONE",parameter.getPHONE());
+////        properties.setProperty("GPS",parameter.getGPS());
+//        properties.setProperty("IMEI", IMEI);
+//        properties.setProperty("MAC",MAC);
+//        properties.setProperty("IMSI",IMSI);
+//        properties.setProperty("MANU",MANU);
+//        properties.setProperty("MODEL",XH);
+//        properties.setProperty("ANDROIDID",ID);
+//        properties.setProperty("VERSION",VERSION);
+//        properties.setProperty("IP",parameter.getIP());
+//        properties.setProperty("PHONE",parameter.getPHONE());
+//        properties.setProperty("GPS",GPS);
+//        saveProperties();
+//        return true;
+//    }
 
     public static String getRandomString(String base, int length){
         Random random = new Random();
@@ -262,8 +271,31 @@ public class ConfigUtil {
         return sb.toString();
     }
 
+    private static String IMEICalc(String head){
+        if(head.length() != 14)return  "";
+        char[] imeiChar=head.toCharArray();
+        int resultInt=0;
+        for (int i = 0; i < imeiChar.length; i++) {
+            int a=Integer.parseInt(String.valueOf(imeiChar[i]));
+            i++;
+            final int temp=Integer.parseInt(String.valueOf(imeiChar[i]))*2;
+            final int b=temp<10?temp:temp-9;
+            resultInt+=a+b;
+        }
+        resultInt%=10;
+        resultInt=resultInt==0?0:10-resultInt;
+
+        return head + resultInt;
+    }
+
     public static String getRandomIMEI(){
-        return getRandomString(GlobalValue.num, 15);
+        String result = "";
+
+        String pre = "35563705";
+        String random = getRandomString(GlobalValue.num, 6);
+        result = pre + random;
+        result = IMEICalc(result);
+        return result;
     }
 
     public static String getRandomMAC(){

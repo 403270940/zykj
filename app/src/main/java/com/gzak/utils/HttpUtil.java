@@ -32,7 +32,7 @@ public class HttpUtil {
             HttpResponse response = httpClient.execute(get);
             HttpEntity entity = response.getEntity();
             result = EntityUtils.toString(entity);
-            Log.e("input","get end");
+            Log.e("input","get end:"+result);
         } catch (Exception e) {
             Log.e("input","",e);
             result = null;
