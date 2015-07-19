@@ -1,4 +1,4 @@
-package com.gzak.entities;
+package com.zykj.entities;
 
 /**
  * Created by yli on 2015/7/17.
@@ -18,7 +18,8 @@ public class Response {
     private String PHONE;
 
     public Response(int resultCode, String resultString){
-
+        this.resultCode = resultCode;
+        this.MSG = resultString;
     }
 
     public Response(int resultCode, String IMEI, String MAC, String ANDROIDID, String MODEL, String GPS, String VERSION, String IMSI, String IP, String PHONE) {

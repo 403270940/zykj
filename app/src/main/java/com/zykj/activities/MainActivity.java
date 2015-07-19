@@ -1,4 +1,4 @@
-package com.gzak.activities;
+package com.zykj.activities;
 
 import android.content.Intent;
 import android.os.Bundle;

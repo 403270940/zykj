@@ -1,17 +1,13 @@
-package com.gzak.utils;
+package com.zykj.utils;
 
 import android.os.Environment;
 
-import android.content.Context;
-import android.content.res.AssetManager;
-import android.content.res.XmlResourceParser;
-import android.graphics.AvoidXfermode;
-import android.os.Environment;
 import android.util.Log;
 
-import com.gzak.entities.Parameter;
-import com.gzak.entities.Response;
+import com.zykj.entities.Parameter;
+import com.zykj.entities.Response;
 
+import org.apache.http.protocol.HTTP;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -125,7 +121,7 @@ public class ConfigUtil {
         properties.setProperty("IMEI","");
         properties.setProperty("MAC","");
         properties.setProperty("IMSI","");
-        properties.setProperty("MANU","");
+        properties.setProperty("MANU", "");
         properties.setProperty("MODEL","");
         properties.setProperty("VERSION","");
         properties.setProperty("GPS", "");
@@ -137,7 +133,7 @@ public class ConfigUtil {
         //if format error return false
         Parameter parameter = null;
         String result = HttpUtil.get();
-        Log.e("input","http result:"+result);
+        Log.e("input", "http result:" + result);
         if(result == null || result.equals("null"))return null;
         Response response = JSONUtil.getResponseFromJSON(result);
         if(response.getResultCode() != 0){
@@ -152,6 +148,30 @@ public class ConfigUtil {
         return parameter;
     }
 
+
+    public static Response updateServerInfo(Parameter parameter,int type){
+        //if get false return false
+        //if format error return false
+        String result = "";
+        if(type == 1){//verify parameter
+            result = HttpUtil.verify(parameter);
+        }if(type == 0){
+            result = HttpUtil.updateRandom(parameter);
+        }else{
+            return null;
+        }
+
+        Log.e("input","http result:"+result);
+        if(result==null||result.equals("")){
+            return null;
+        }
+
+        if(result == null || result.equals("null"))return null;
+        Response response = JSONUtil.getResponseFromJSON(result);
+        return response;
+//        outModel();
+
+    }
 
 
     public static String get(String key){
@@ -219,7 +239,7 @@ public class ConfigUtil {
         properties.setProperty("VERSION",parameter.getVERSION());
         properties.setProperty("IP",parameter.getIP());
         properties.setProperty("PHONE",parameter.getPHONE());
-        properties.setProperty("GPS",parameter.getGPS());
+        properties.setProperty("GPS", parameter.getGPS());
         saveProperties();
         return true;
     }
@@ -322,8 +342,15 @@ public class ConfigUtil {
 
 
     public static String getRandomVersion(){
-        String result = "KOT49H.I9508ZMUGNH6";
-        return result;
+        List<String> versionList= new ArrayList<String>();
+        versionList.add("KOT49H.ZMUGNH6");
+        versionList.add("V100R001CHNC01B127");
+        versionList.add("H430aR011MCB01B8bc");
+        versionList.add("1003020hct.001");
+        versionList.add("uhi1000opq0003");
+        Random random = new Random();
+        int index = random.nextInt(versionList.size());
+        return versionList.get(index);
     }
 
     public static String getRandomModel(){
@@ -342,7 +369,9 @@ public class ConfigUtil {
 
     public static String getRandomGPS(){
         String result = "120.104776,30.290787";
-        return result;
+        String lat = "1" + getRandomString(GlobalValue.num,2) + "." + getRandomString(GlobalValue.num,6);
+        String lon = getRandomString(GlobalValue.num,2) + "." + getRandomString(GlobalValue.num, 6);
+        return lat + "," + lon;
     }
 
 }

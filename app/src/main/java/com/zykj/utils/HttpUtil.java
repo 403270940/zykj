@@ -1,6 +1,8 @@
-package com.gzak.utils;
+package com.zykj.utils;
 
 import android.util.Log;
+
+import com.zykj.entities.Parameter;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -28,6 +30,49 @@ public class HttpUtil {
     public static String get(){
         String result = null;
         HttpGet get = new HttpGet(GlobalValue.modiParamURL);
+        try {
+            HttpResponse response = httpClient.execute(get);
+            HttpEntity entity = response.getEntity();
+            result = EntityUtils.toString(entity);
+            Log.e("input","get end:"+result);
+        } catch (Exception e) {
+            Log.e("input","",e);
+            result = null;
+        }
+        return result;
+    }
+
+    public static String updateRandom(Parameter parameter){
+        String result = null;
+        String updateurl = GlobalValue.randomURL;
+        updateurl +=  "&imei="+parameter.getIMEI();
+        updateurl +=  "&mac="+parameter.getMAC();
+        updateurl +=  "&imsi="+parameter.getIMSI();
+        updateurl +=  "&androidid="+parameter.getANDROIDID();
+        updateurl +=  "&version="+parameter.getVERSION();
+        updateurl +=  "&ip="+parameter.getIP();
+        updateurl +=  "&gps="+parameter.getGPS();
+        Log.e("input","url:" + updateurl);
+        HttpGet get = new HttpGet(updateurl);
+        try {
+            HttpResponse response = httpClient.execute(get);
+            HttpEntity entity = response.getEntity();
+            result = EntityUtils.toString(entity);
+            Log.e("input","get end:"+result);
+        } catch (Exception e) {
+            Log.e("input","",e);
+            result = null;
+        }
+        return result;
+    }
+
+    public static String verify(Parameter parameter){
+        String result = null;
+        String updateurl = GlobalValue.updateURL;
+        updateurl +=  "&imsi="+parameter.getIMSI();
+        updateurl +=  "&phone="+parameter.getPHONE();
+        Log.e("input","url:" + updateurl);
+        HttpGet get = new HttpGet(updateurl);
         try {
             HttpResponse response = httpClient.execute(get);
             HttpEntity entity = response.getEntity();

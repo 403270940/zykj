@@ -1,4 +1,4 @@
-package com.gzak.entities;
+package com.zykj.entities;
 
 /**
  * Created by yli on 2015/7/17.
