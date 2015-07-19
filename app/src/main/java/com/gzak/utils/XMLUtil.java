@@ -26,37 +26,40 @@ import java.util.List;
  */
 public class XMLUtil {
 
-    public static List<Parameter> getTaskList(){
-        List<Parameter> taskParameters = null;
-        String fileName = Environment.getDataDirectory() + "/task.xml";
-        try {
-            InputStream in = new FileInputStream(fileName);
-            Document doc = Jsoup.parse(in, "utf-8", "", Parser.xmlParser());
-            Element phones = doc.select("phones").first();
-            if(phones == null)
-                return null;
-            Elements phoneElements = phones.select("phone");
-            if(phoneElements==null || phoneElements.size()<=0)return null;
-            taskParameters = new ArrayList<Parameter>();
-            for(Element phone : phoneElements){
-                String IMEI = phone.select("IMEI").first().text();
-                String MAC = phone.select("MAC").first().text();
-                String IMSI = phone.select("IMSI").first().text();
-                String MANU = phone.select("IMEI").first().text();
-                String MODEL = phone.select("MODEL").first().text();
-                String PHONE = phone.select("PHONE").first().text();
-                String SDK = phone.select("SDK").first().text();
-
-                Parameter parameter = new Parameter(IMEI,MAC,IMSI,MANU,MODEL,PHONE,SDK);
-                taskParameters.add(parameter);
-            }
-            in.close();
-        } catch (Exception e) {
-            Log.e("input", "", e);
-
-        }
-        return taskParameters;
-    }
+//    public static List<Parameter> getTaskList(){
+//        List<Parameter> taskParameters = null;
+//        String fileName = Environment.getDataDirectory() + "/task.xml";
+//        try {
+//            InputStream in = new FileInputStream(fileName);
+//            Document doc = Jsoup.parse(in, "utf-8", "", Parser.xmlParser());
+//            Element phones = doc.select("phones").first();
+//            if(phones == null)
+//                return null;
+//            Elements phoneElements = phones.select("phone");
+//            if(phoneElements==null || phoneElements.size()<=0)return null;
+//            taskParameters = new ArrayList<Parameter>();
+//            for(Element phone : phoneElements){
+//                String IMEI = phone.select("IMEI").first().text();
+//                String MAC = phone.select("MAC").first().text();
+//                String IMSI = phone.select("IMSI").first().text();
+//                String MANU = phone.select("IMEI").first().text();
+//                String MODEL = phone.select("MODEL").first().text();
+//                String VERSION = phone.select("VERSION").first().text();
+//                String PHONE = phone.select("PHONE").first().text();
+//                String ANDROIDID = phone.select("ANDROIDID").first().text();
+//                String GPS = phone.select("GPS").first().text();
+//                String IP = phone.select("IP").first().text();
+////                (String IMEI, String MAC, String IMSI, String MANU, String MODEL, String VERSION, String PHONE,String ANDROIDID, String GPS,String IP)
+//                Parameter parameter = new Parameter(IMEI,MAC,IMSI,MANU,MODEL,VERSION,PHONE,ANDROIDID,GPS,IP);
+//                taskParameters.add(parameter);
+//            }
+//            in.close();
+//        } catch (Exception e) {
+//            Log.e("input", "", e);
+//
+//        }
+//        return taskParameters;
+//    }
 
     public static boolean addParameter(Parameter parameter){
         List<Parameter> taskParameters = null;
@@ -67,20 +70,28 @@ public class XMLUtil {
             in.close();
             Element phones = doc.select("phones").first();
             Element phone = doc.createElement("phone");
+// (String IMEI, String MAC, String IMSI, String MANU, String MODEL, String VERSION, String PHONE,String ANDROIDID, String GPS,String IP)
             Element IMEI = phone.appendElement("IMEI");
             IMEI.appendText(parameter.getIMEI());
             Element MAC = phone.appendElement("MAC");
-            IMEI.appendText(parameter.getMAC());
+            MAC.appendText(parameter.getMAC());
             Element IMSI = phone.appendElement("IMSI");
-            IMEI.appendText(parameter.getIMSI());
+            IMSI.appendText(parameter.getIMSI());
             Element MANU = phone.appendElement("MANU");
-            IMEI.appendText(parameter.getMANU());
+            MANU.appendText(parameter.getMANU());
             Element MODEL = phone.appendElement("MODEL");
-            IMEI.appendText(parameter.getMODEL());
-            Element PHONE = phone.appendElement("PHONE");
-            IMEI.appendText(parameter.getPHONE());
-            Element SDK = phone.appendElement("SDK");
-            IMEI.appendText(parameter.getSDK());
+            MODEL.appendText(parameter.getMODEL());
+            Element VERSION = phone.appendElement("VERSION");
+            VERSION.appendText(parameter.getVERSION());
+            Element PHONENUM = phone.appendElement("PHONENUM");
+            PHONENUM.appendText(parameter.getPHONE());
+            Element ANDROIDID = phone.appendElement("ANDROIDID");
+            ANDROIDID.appendText(parameter.getANDROIDID());
+            Element GPS = phone.appendElement("GPS");
+            GPS.appendText(parameter.getGPS());
+            Element IP = phone.appendElement("IP");
+            IP.appendText(parameter.getIP());
+
             FileOutputStream fos = new FileOutputStream(fileName);
             fos.write(doc.toString().getBytes());
         } catch (Exception e) {

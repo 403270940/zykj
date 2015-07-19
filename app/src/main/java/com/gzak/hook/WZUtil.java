@@ -37,14 +37,14 @@ public class WZUtil implements IXposedHookLoadPackage{
                 XposedHelpers.setStaticObjectField(classBuild, "MODEL", saveModel);
                 XposedHelpers.setStaticObjectField(classBuild, "BRAND", saveModel);
             }
-//            String saveVersion = ConfigUtil.get("VERSION");
-//            if (!saveVersion.equals("null") && !saveVersion.equals("")) XposedHelpers.setStaticObjectField(classBuild, "DISPLAY", saveVersion);
+            String saveVersion = ConfigUtil.get("VERSION");
+            if (!saveVersion.equals("null") && !saveVersion.equals("")) XposedHelpers.setStaticObjectField(classBuild, "DISPLAY", saveVersion);
 
-            Class<?> classVERSION = XposedHelpers.findClass("android.os.Build.VERSION", loadPackageParam.classLoader);
-            String saveSDK = ConfigUtil.get("SDK");
-            if (!saveSDK.equals("null") && !saveSDK.equals("")) XposedHelpers.setStaticObjectField(classVERSION, "SDK", saveSDK);
-            String saveVersion = ConfigUtil.get("SDK");
-            if (!saveVersion.equals("null") && !saveVersion.equals("")) XposedHelpers.setStaticObjectField(classVERSION, "RELEASE", saveVersion);
+//            Class<?> classVERSION = XposedHelpers.findClass("android.os.Build.VERSION", loadPackageParam.classLoader);
+//            String saveSDK = ConfigUtil.get("SDK");
+//            if (!saveSDK.equals("null") && !saveSDK.equals("")) XposedHelpers.setStaticObjectField(classVERSION, "SDK", saveSDK);
+//            String saveVersion = ConfigUtil.get("SDK");
+//            if (!saveVersion.equals("null") && !saveVersion.equals("")) XposedHelpers.setStaticObjectField(classVERSION, "RELEASE", saveVersion);
 
             Class<?> classTelephonyManager = XposedHelpers.findClass("android.telephony.TelephonyManager", loadPackageParam.classLoader);
             Class<?> classWifiInfo         = XposedHelpers.findClass("android.net.wifi.WifiInfo", loadPackageParam.classLoader);
@@ -84,33 +84,33 @@ public class WZUtil implements IXposedHookLoadPackage{
                 }
             });
 
-//            XposedHelpers.findAndHookMethod(classLocationManager, "getLastKnownLocation" , String.class, new XC_MethodHook()
-//            {
-//                @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-//                @Override
-//                protected void afterHookedMethod(MethodHookParam param) throws Throwable
-//                {
-//                    if(param.getResult() != null&&param!=null)
-//                        Log.e("input loc before",param.getResult().toString());
-//                    else
-//                        Log.e("input loc before","location is null");
-//                    String saveValue = ConfigUtil.get("GPS");
-//                    if (!saveValue.equals("null")  && !saveValue.equals("")){
-//                        String[] gps = saveValue.split(",");
-//                        double lat = Double.valueOf(gps[0]);
-//                        double lon = Double.valueOf(gps[1]);
-//                        Location location = new Location(LocationManager.GPS_PROVIDER);
-//                        location.setLatitude(lat);
-//                        location.setLongitude(lon);
-//                        location.setAccuracy(70);
-//                        location.setElapsedRealtimeNanos(SystemClock.elapsedRealtimeNanos());
-//                        param.setResult(location);
-//                    }
-//                    if(param.getResult() != null&&param!=null)
-//                        Log.e("input loc after",param.getResult().toString());
-//                    super.afterHookedMethod(param);
-//                }
-//            });
+            XposedHelpers.findAndHookMethod(classLocationManager, "getLastKnownLocation" , String.class, new XC_MethodHook()
+            {
+                @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+                @Override
+                protected void afterHookedMethod(MethodHookParam param) throws Throwable
+                {
+                    if(param.getResult() != null&&param!=null)
+                        Log.e("input loc before",param.getResult().toString());
+                    else
+                        Log.e("input loc before","location is null");
+                    String saveValue = ConfigUtil.get("GPS");
+                    if (!saveValue.equals("null")  && !saveValue.equals("")){
+                        String[] gps = saveValue.split(",");
+                        double lat = Double.valueOf(gps[0]);
+                        double lon = Double.valueOf(gps[1]);
+                        Location location = new Location(LocationManager.GPS_PROVIDER);
+                        location.setLatitude(lat);
+                        location.setLongitude(lon);
+                        location.setAccuracy(70);
+                        location.setElapsedRealtimeNanos(SystemClock.elapsedRealtimeNanos());
+                        param.setResult(location);
+                    }
+                    if(param.getResult() != null&&param!=null)
+                        Log.e("input loc after",param.getResult().toString());
+                    super.afterHookedMethod(param);
+                }
+            });
 
             XposedHelpers.findAndHookMethod(classSettingsSecure, "getString", android.content.ContentResolver.class, String.class, new XC_MethodHook() {
                 @Override

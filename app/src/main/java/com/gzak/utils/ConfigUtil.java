@@ -10,6 +10,7 @@ import android.os.Environment;
 import android.util.Log;
 
 import com.gzak.entities.Parameter;
+import com.gzak.entities.Response;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -131,10 +132,21 @@ public class ConfigUtil {
         return true;
     }
 
-    public static String getServerInfo(){
+    public static Parameter getServerInfo(){
         //if get false return false
         //if format error return false
-        outModel();
+        String result = HttpUtil.get();
+        if(result == null || result.equals("null"))return null;
+        Response response = JSONUtil.getResponseFromJSON(result);
+        if(response.getResultCode() != 0){
+            return null;
+        }else{
+            String model = response.getMODEL();
+            String MANU = model.split(" ")[0].trim();
+            String XH = model.split(" ")[1].trim();
+            Parameter parameter = new Parameter(response.getIMEI(),response.getMAC(),response.getIMSI(),MANU,XH,response.getVERSION(),response.getPHONE(),response.getANDROIDID(),response.getGPS(),response.getIP());
+        }
+//        outModel();
         return null;
     }
 
@@ -185,6 +197,17 @@ public class ConfigUtil {
 //        Log.e("input add", "MODEL:" + MODEL);
 //        Log.e("input add", "ANDROIDID:" + ID);
 //        Log.e("input add", "GPS:" + GPS);
+
+//        private String IMEI;
+//        private String MAC;
+//        private String IMSI;
+//        private String MANU;
+//        private String MODEL;
+//        private String ANDROIDID;
+//        private String VERSION;
+//        private String IP;
+//        private String PHONE;
+//        private String GPS;
         String[] modelArray = parameter.getMODEL().split(" ");
         String MANU = modelArray[0].trim();
         String XH = modelArray[1].trim();
@@ -196,8 +219,10 @@ public class ConfigUtil {
         properties.setProperty("MANU",parameter.getMANU());
         properties.setProperty("MODEL",parameter.getMODEL());
         properties.setProperty("ANDROIDID",parameter.getANDROIDID());
+        properties.setProperty("VERSION",parameter.getVERSION());
+        properties.setProperty("IP",parameter.getIP());
         properties.setProperty("PHONE",parameter.getPHONE());
-        properties.setProperty("SDK",parameter.getSDK());
+        properties.setProperty("GPS",parameter.getGPS());
         saveProperties();
         return true;
     }

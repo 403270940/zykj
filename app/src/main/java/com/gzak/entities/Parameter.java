@@ -8,33 +8,30 @@ public class Parameter {
     //需要模拟信息有：IMEI号，手机号，SIM卡串口号，符合iso标注的国家码，
     // SIM卡提供商的移动国家码，服务运营商的名称，
     // 手机型号，SDK版本号，操作系统版本，手机MAC地址
-    String IMEI;
-    String MAC;
-    String IMSI;
-    String MANU;
-    String MODEL;
-    String PHONE;
-    String SDK;
-    String ANDROIDID;
+    private String IMEI;
+    private String MAC;
+    private String IMSI;
+    private String MANU;
+    private String MODEL;
+    private String GPS;
+    private String VERSION;
+    private String ANDROIDID;
+    private String IP;
+    private String PHONE;
 
-    public Parameter(String IMEI, String MAC, String IMSI, String MANU, String MODEL, String PHONE, String SDK,String ANDROIDID) {
+    public Parameter(String IMEI, String MAC, String IMSI, String MANU, String MODEL, String VERSION, String PHONE,String ANDROIDID, String GPS,String IP) {
         this.IMEI = IMEI;
         this.MAC = MAC;
         this.IMSI = IMSI;
         this.MANU = MANU;
         this.MODEL = MODEL;
         this.PHONE = PHONE;
-        this.SDK = SDK;
+        this.VERSION = VERSION;
         this.ANDROIDID = ANDROIDID;
+        this.GPS = GPS;
+        this.IP = IP;
     }
 
-    public String getSDK() {
-        return SDK;
-    }
-
-    public void setSDK(String SDK) {
-        this.SDK = SDK;
-    }
 
     public String getIMEI() {
         return IMEI;
@@ -90,5 +87,29 @@ public class Parameter {
 
     public void setANDROIDID(String ANDROIDID) {
         this.ANDROIDID = ANDROIDID;
+    }
+
+    public String getIP() {
+        return IP;
+    }
+
+    public void setIP(String IP) {
+        this.IP = IP;
+    }
+
+    public String getGPS() {
+        return GPS;
+    }
+
+    public void setGPS(String GPS) {
+        this.GPS = GPS;
+    }
+
+    public String getVERSION() {
+        return VERSION;
+    }
+
+    public void setVERSION(String VERSION) {
+        this.VERSION = VERSION;
     }
 }

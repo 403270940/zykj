@@ -1,245 +1,21 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     tools:context="com.gzak.getinfo.Param"
-    android:orientation="vertical">
+    >
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="fill_parent"
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:text="IMEI:"
-            android:id="@+id/IMEITextView"
-            android:minHeight="0dp"
-            android:minWidth="0dp"
-            android:textStyle="bold"
-            android:layout_weight="0.50"
-            android:gravity="center_vertical" />
-
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_weight="5"
-            android:id="@+id/IMEIEditText" />
-
-        <Button
-            android:layout_width="70dp"
-            android:layout_height="fill_parent"
-            android:text="随机"
-            android:id="@+id/IMEIButton" />
-    </LinearLayout>
+        android:id="@+id/ShowTextView"
+        android:gravity="top" />
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp" >
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:text="MAC:"
-            android:id="@+id/MACTextView"
-            android:minHeight="0dp"
-            android:minWidth="0dp"
-            android:textStyle="bold"
-            android:layout_weight="0.50"
-            android:gravity="center_vertical" />
-
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_weight="5"
-            android:id="@+id/MACEditText" />
-
-        <Button
-            android:layout_width="70dp"
-            android:layout_height="fill_parent"
-            android:text="随机"
-            android:id="@+id/MACButton" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp" >
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:text="IMSI:"
-            android:id="@+id/IMSITextView"
-            android:minHeight="0dp"
-            android:minWidth="0dp"
-            android:textStyle="bold"
-            android:layout_weight="0.50"
-            android:gravity="center_vertical" />
-
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_weight="5"
-            android:id="@+id/IMSIEditText" />
-
-        <Button
-            android:layout_width="70dp"
-            android:layout_height="fill_parent"
-            android:text="随机"
-            android:id="@+id/IMSIButton" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp"
-        android:layout_gravity="center_horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:text="型号:"
-            android:id="@+id/ModelTextView"
-            android:minHeight="0dp"
-            android:minWidth="0dp"
-            android:textStyle="bold"
-            android:layout_weight="0.50"
-            android:gravity="center_vertical" />
-
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_weight="5"
-            android:id="@+id/ModelEditText" />
-
-        <Button
-            android:layout_width="70dp"
-            android:layout_height="fill_parent"
-            android:text="随机"
-            android:id="@+id/ModelButton" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp" >
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:text="版本:"
-            android:id="@+id/VersionTextView"
-            android:minHeight="0dp"
-            android:minWidth="0dp"
-            android:textStyle="bold"
-            android:layout_weight="0.50"
-            android:gravity="center_vertical" />
-
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_weight="5"
-            android:id="@+id/VersionEditText" />
-
-        <Button
-            android:layout_width="70dp"
-            android:layout_height="fill_parent"
-            android:text="随机"
-            android:id="@+id/VersionButton" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:text="安卓ID:"
-            android:id="@+id/IDTextView"
-            android:minHeight="0dp"
-            android:minWidth="0dp"
-            android:textStyle="bold"
-            android:layout_weight="0.50"
-            android:gravity="center_vertical" />
-
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_weight="5"
-            android:id="@+id/IDEditText" />
-
-        <Button
-            android:layout_width="70dp"
-            android:layout_height="fill_parent"
-            android:text="随机"
-            android:id="@+id/IDButton" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp" >
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:text="GPS:"
-            android:id="@+id/GPSTextView"
-            android:minHeight="0dp"
-            android:minWidth="0dp"
-            android:textStyle="bold"
-            android:layout_weight="0.50"
-            android:gravity="center_vertical" />
-
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_weight="5"
-            android:id="@+id/GPSEditText" />
-
-        <Button
-            android:layout_width="70dp"
-            android:layout_height="fill_parent"
-            android:text="随机"
-            android:id="@+id/GPSButton" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_gravity="bottom"
+        android:layout_alignParentBottom="true">
 
         <Button
             android:layout_width="wrap_content"
@@ -267,5 +43,4 @@
     </LinearLayout>
 
 
-
-</LinearLayout>
+</RelativeLayout>
