@@ -155,10 +155,9 @@ public class ConfigUtil {
         String result = "";
         if(type == 1){//verify parameter
             result = HttpUtil.verify(parameter);
-        }if(type == 0){
+        }
+        if(type == 0){
             result = HttpUtil.updateRandom(parameter);
-        }else{
-            return null;
         }
 
         Log.e("input","http result:"+result);
@@ -167,7 +166,9 @@ public class ConfigUtil {
         }
 
         if(result == null || result.equals("null"))return null;
+        //{error:"0",msg:"����ɹ�"}
         Response response = JSONUtil.getResponseFromJSON(result);
+
         return response;
 //        outModel();
 

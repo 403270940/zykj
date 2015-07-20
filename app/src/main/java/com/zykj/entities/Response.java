@@ -125,7 +125,7 @@ public class Response {
 
     @Override
     public String toString() {
-        if(resultCode == 0){
+        if(resultCode == 0 && MSG!=null){
             return "Response{" +
                     "resultCode=" + resultCode +
                     ", IMEI='" + IMEI + '\'' +
@@ -137,6 +137,7 @@ public class Response {
                     ", IMSI='" + IMSI + '\'' +
                     ", IP='" + IP + '\'' +
                     ", PHONE='" + PHONE + '\'' +
+                    ", MSG='" + MSG + '\'' +
                     '}';
         }else{
             return "Response{" +

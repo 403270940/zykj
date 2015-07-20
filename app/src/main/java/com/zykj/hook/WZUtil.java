@@ -20,8 +20,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
 public class WZUtil implements IXposedHookLoadPackage{
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam loadPackageParam) throws Throwable {
-        if ( loadPackageParam.packageName.equals("com.liyongyue.getinfo") ){
-            Log.e("input hook","enter hook");
+
         try{
             Class<?> classBuild = XposedHelpers.findClass("android.os.Build", loadPackageParam.classLoader);
             String saveModel        = ConfigUtil.get("MODEL");
@@ -142,5 +141,5 @@ public class WZUtil implements IXposedHookLoadPackage{
             Log.e("input","HOOK Error",e);
         }
     }
-    }
+
 }

@@ -21,6 +21,11 @@ public class JSONUtil {
             int resultcode = joj.getInt("error");
 
             if(resultcode==0){
+                if(json.contains("msg")){
+                    String msg = joj.getString("msg");
+                    response = new Response(resultcode,msg);
+                    return response;
+                }
             String IMEI = joj.getString("imei");
             String MAC = joj.getString("mac");
             String ANDROIDID = joj.getString("androidid");

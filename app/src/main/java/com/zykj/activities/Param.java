@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.liyongyue.zykj.R;
 import com.zykj.entities.Parameter;
 import com.zykj.entities.Response;
 import com.zykj.utils.ConfigUtil;
@@ -70,8 +71,10 @@ public class Param extends ActionBarActivity {
                 info += "GPS:" + GPS + "\n";
                 info += "IP:" + IP + "\n";
                 info += "PHONE:" + PHONE;
+                type = 1;
                 Toast.makeText(getApplicationContext(), "获取服务器参数成功", Toast.LENGTH_LONG).show();
                 showTextView.setText(info);
+
             }else if(msg.what == 1){
 
                 Response response = (Response)msg.obj;
@@ -82,7 +85,7 @@ public class Param extends ActionBarActivity {
 
                     }else if(response.getResultCode() == 1){
                         Toast.makeText(getApplicationContext(), response.getResultString(), Toast.LENGTH_LONG).show();
-                    }else if(response.getResultCode() == 1){
+                    }else if(response.getResultCode() == 2){
                         Toast.makeText(getApplicationContext(), response.getResultString(), Toast.LENGTH_LONG).show();
                     } else{
                         Toast.makeText(getApplicationContext(), "上传服务器失败，未知错误", Toast.LENGTH_LONG).show();
@@ -185,7 +188,7 @@ public class Param extends ActionBarActivity {
                         break;
 
                     case R.id.ServerGetButton:
-//                        ConfigUtil.getServerInfo();
+
                         new AlertDialog.Builder(Param.this).setTitle("确认从服务获取参数吗？")
                                 .setIcon(android.R.drawable.ic_dialog_info)
                                 .setPositiveButton("确认", new DialogInterface.OnClickListener() {
@@ -249,6 +252,7 @@ public class Param extends ActionBarActivity {
         showTextView.setText(info);
         type = 0;
     }
+
     private void getServerInfo(){
         Parameter parameter = ConfigUtil.getServerInfo();
         IMEI = parameter.getIMEI();
@@ -274,7 +278,7 @@ public class Param extends ActionBarActivity {
         info += "PHONE:"+PHONE;
 
         showTextView.setText(info);
-        type = 1;
+
     }
 
     private void initParam(){

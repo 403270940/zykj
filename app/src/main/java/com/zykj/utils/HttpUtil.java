@@ -48,6 +48,8 @@ public class HttpUtil {
         updateurl +=  "&imei="+parameter.getIMEI();
         updateurl +=  "&mac="+parameter.getMAC();
         updateurl +=  "&imsi="+parameter.getIMSI();
+        updateurl +=  "&phone="+parameter.getPHONE();
+        updateurl +=  "&model="+parameter.getMODEL();
         updateurl +=  "&androidid="+parameter.getANDROIDID();
         updateurl +=  "&version="+parameter.getVERSION();
         updateurl +=  "&ip="+parameter.getIP();
