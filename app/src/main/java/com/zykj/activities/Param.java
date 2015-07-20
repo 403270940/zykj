@@ -147,6 +147,7 @@ public class Param extends ActionBarActivity {
                                     public void onClick(DialogInterface dialog, int which) {
                                         // �����ȷ�ϡ���Ĳ���
                                         saveAllParam();
+                                        Param.this.finish();
 
                                     }
                                 })
