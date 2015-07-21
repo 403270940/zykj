@@ -11,6 +11,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -60,6 +61,10 @@ public class XMLUtil {
     public static boolean addParameter(Parameter parameter){
         List<Parameter> taskParameters = null;
         String fileName = Environment.getDataDirectory() + "/task.xml";
+        File file = new File(fileName);
+        if(!file.exists()){
+
+        }
         try {
             InputStream in = new FileInputStream(fileName);
             Document doc = Jsoup.parse(in, "utf-8", "", Parser.xmlParser());

@@ -198,6 +198,8 @@ public class ConfigUtil {
 
     public static boolean saveProperties(){
         File file = new File(propertyFileName);
+        if(!file.exists())
+            file.getParentFile().mkdirs();
         try {
             FileOutputStream fos = new FileOutputStream(file,false);
             properties.store(fos, "");
@@ -210,25 +212,6 @@ public class ConfigUtil {
 
 
     public static boolean addParams(Parameter parameter){
-//        Log.e("input add","IMEI:" + IMEI);
-//        Log.e("input add","MAC:" + MAC);
-//        Log.e("input add","IMSI:" + IMSI);
-//        Log.e("input add","VERSION:" + VERSION);
-//        Log.e("input add", "MODEL:" + MODEL);
-//        Log.e("input add", "ANDROIDID:" + ID);
-//        Log.e("input add", "GPS:" + GPS);
-
-//        private String IMEI;
-//        private String MAC;
-//        private String IMSI;
-//        private String MANU;
-//        private String MODEL;
-//        private String ANDROIDID;
-//        private String VERSION;
-//        private String IP;
-//        private String PHONE;
-//        private String GPS;
-
         if(properties==null)
             properties = new Properties();
         properties.setProperty("IMEI", parameter.getIMEI());
