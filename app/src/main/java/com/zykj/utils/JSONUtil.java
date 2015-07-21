@@ -12,7 +12,7 @@ import org.json.JSONObject;
  */
 public class JSONUtil {
 
-    public static Response getResponseFromJSON(String json){
+    public static Response getResponseFromJSON(String json)throws Exception{
         Response response = null;
         try {
 
@@ -43,7 +43,7 @@ public class JSONUtil {
             }
         }catch (Exception e){
             Log.e("input","",e);
-            return null;
+            throw  new Exception("网络请求返回格式错误，返回结果：" + json);
         }
         return response;
     }

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.ActionBarActivity;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -16,6 +17,7 @@ import com.liyongyue.zykj.R;
 import com.zykj.entities.Parameter;
 import com.zykj.entities.Response;
 import com.zykj.utils.ConfigUtil;
+import com.zykj.utils.XMLUtil;
 
 
 public class Param extends ActionBarActivity {
@@ -92,6 +94,9 @@ public class Param extends ActionBarActivity {
                     }
                 } else
                     Toast.makeText(getApplicationContext(), "网络请求失败", Toast.LENGTH_LONG).show();
+            }else if(msg.what == 2){
+                Exception e = (Exception)msg.obj;
+                Toast.makeText(getApplicationContext(),e.getMessage() , Toast.LENGTH_LONG).show();
             }
 
         }
@@ -101,13 +106,15 @@ public class Param extends ActionBarActivity {
     Thread thread =  new Thread(){
         @Override
         public void run(){
+            try{
             if(code == 0){
                 Parameter parameter = ConfigUtil.getServerInfo();
-//            handler.sendEmptyMessage(0);
+                //handler.sendEmptyMessage(0);
                 Message msg = new Message();
                 msg.what = 0;
                 msg.obj = parameter;
                 handler.sendMessage(msg);
+
             }else if(code == 1){
                 Response result = ConfigUtil.updateServerInfo((Parameter)obj,type);
 //            handler.sendEmptyMessage(0);
@@ -116,7 +123,12 @@ public class Param extends ActionBarActivity {
                 msg.obj = result;
                 handler.sendMessage(msg);
             }
-
+            }catch (Exception e){
+                Message msg = new Message();
+                msg.what = 2;
+                msg.obj = e;
+                handler.sendMessage(msg);
+            }
         }
     };
     @Override
@@ -136,7 +148,6 @@ public class Param extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 switch(v.getId()){
-
 
                     case R.id.OKButton:
                         new AlertDialog.Builder(Param.this).setTitle("确认修改吗？")
@@ -228,7 +239,8 @@ public class Param extends ActionBarActivity {
     private void getRandomInfo(){
         IMEI = ConfigUtil.getRandomIMEI();
         MAC = ConfigUtil.getRandomMAC();
-        IMSI = ConfigUtil.getRandomIMSI();
+        TelephonyManager tm = (TelephonyManager) getSystemService(this.TELEPHONY_SERVICE);
+        IMSI = tm.getSubscriberId();
         VERSION = ConfigUtil.getRandomVersion();
         String sj = ConfigUtil.getRandomModel();
         MANU = sj.split(" ")[0].trim();
@@ -254,33 +266,7 @@ public class Param extends ActionBarActivity {
         type = 0;
     }
 
-    private void getServerInfo(){
-        Parameter parameter = ConfigUtil.getServerInfo();
-        IMEI = parameter.getIMEI();
-        MAC = parameter.getMAC();
-        IMSI = parameter.getIMSI();
-        VERSION = parameter.getVERSION();
-        MANU = parameter.getMANU();
-        MODEL = parameter.getMODEL();
-        ID = parameter.getANDROIDID();
-        GPS = parameter.getGPS();
-        IP = parameter.getIP();
-        PHONE = parameter.getPHONE();
-        String info = "";
-        info += "IMEI:"+IMEI +"\n";
-        info += "MAC:"+MAC +"\n";
-        info += "IMSI:"+IMSI +"\n";
-        info += "VERSION:"+VERSION +"\n";
-        info += "MANU:"+MANU +"\n";
-        info += "MODEL:"+MODEL +"\n";
-        info += "ID:"+ID +"\n";
-        info += "GPS:"+GPS +"\n";
-        info += "IP:"+IP +"\n";
-        info += "PHONE:"+PHONE;
 
-        showTextView.setText(info);
-
-    }
 
     private void initParam(){
         IMEI = ConfigUtil.get("IMEI");
@@ -350,6 +336,7 @@ public class Param extends ActionBarActivity {
         }
         Parameter parameter = new Parameter(IMEI,MAC,IMSI,MANU,MODEL,VERSION,PHONE,ID,GPS,IP);
         boolean result = ConfigUtil.addParams(parameter);
+        result &= XMLUtil.addParameter(parameter);
         code = 1;
         obj = parameter;
         new Thread(thread).start();

@@ -16,6 +16,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
@@ -57,20 +58,32 @@ public class XMLUtil {
 //        }
 //        return taskParameters;
 //    }
+    public static String getToday(){
+        SimpleDateFormat sDateFormat   =   new   SimpleDateFormat("yyyy-MM-dd");
+        String   date   =   sDateFormat.format(new   java.util.Date());
+        return date;
+    }
 
     public static boolean addParameter(Parameter parameter){
-        List<Parameter> taskParameters = null;
-        String fileName = Environment.getDataDirectory() + "/task.xml";
+        String fileName = Environment.getExternalStorageDirectory() + "/shua/" + getToday() + "/finished.xml";
         File file = new File(fileName);
         if(!file.exists()){
-
+            try {
+                file.getParentFile().mkdirs();
+                FileOutputStream fos = new FileOutputStream(fileName);
+                fos.write("<phones></phones>".getBytes());
+                fos.flush();
+                fos.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         try {
             InputStream in = new FileInputStream(fileName);
             Document doc = Jsoup.parse(in, "utf-8", "", Parser.xmlParser());
             in.close();
             Element phones = doc.select("phones").first();
-            Element phone = doc.createElement("phone");
+            Element phone = phones.appendElement("phone");
 // (String IMEI, String MAC, String IMSI, String MANU, String MODEL, String VERSION, String PHONE,String ANDROIDID, String GPS,String IP)
             Element IMEI = phone.appendElement("IMEI");
             IMEI.appendText(parameter.getIMEI());
@@ -95,6 +108,8 @@ public class XMLUtil {
 
             FileOutputStream fos = new FileOutputStream(fileName);
             fos.write(doc.toString().getBytes());
+            fos.flush();
+            fos.close();
         } catch (Exception e) {
             Log.e("input", "", e);
         }

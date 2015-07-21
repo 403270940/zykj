@@ -55,17 +55,17 @@ public class WZUtil implements IXposedHookLoadPackage{
                     super.afterHookedMethod(param);
                 }
             });
-
-            XposedHelpers.findAndHookMethod(classTelephonyManager, "getSubscriberId", new XC_MethodHook()
-            {
-                @Override
-                protected void afterHookedMethod(MethodHookParam param) throws Throwable
-                {
-                    String saveValue = ConfigUtil.get("IMSI");
-                    if (!saveValue.equals("null") && !saveValue.equals("")) param.setResult(saveValue);
-                    super.afterHookedMethod(param);
-                }
-            });
+//
+//            XposedHelpers.findAndHookMethod(classTelephonyManager, "getSubscriberId", new XC_MethodHook()
+//            {
+//                @Override
+//                protected void afterHookedMethod(MethodHookParam param) throws Throwable
+//                {
+//                    String saveValue = ConfigUtil.get("IMSI");
+//                    if (!saveValue.equals("null") && !saveValue.equals("")) param.setResult(saveValue);
+//                    super.afterHookedMethod(param);
+//                }
+//            });
 
             XposedHelpers.findAndHookMethod(classWifiInfo, "getMacAddress", new XC_MethodHook()
             {

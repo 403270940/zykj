@@ -1,7 +1,9 @@
 package com.zykj.utils;
 
+import android.content.Context;
 import android.os.Environment;
 
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.zykj.entities.Parameter;
@@ -30,7 +32,7 @@ import java.util.Random;
  */
 public class ConfigUtil {
 
-    private static final String propertyFileName = Environment.getExternalStorageDirectory() + "/config.properties";
+    private static final String propertyFileName = Environment.getExternalStorageDirectory() + "/shua/config.properties";
     private static Properties properties = null;
     private static HashMap<String,String> modelMap = null;
     private static ArrayList<String> modelList = null;
@@ -128,28 +130,42 @@ public class ConfigUtil {
         return true;
     }
 
-    public static Parameter getServerInfo(){
+    public static Parameter getServerInfo() throws  Exception{
         //if get false return false
         //if format error return false
         Parameter parameter = null;
+
         String result = HttpUtil.get();
         Log.e("input", "http result:" + result);
-        if(result == null || result.equals("null"))return null;
+        if(result == null || result.equals("null")){
+            throw new Exception("网络请求返回为空");
+        }
         Response response = JSONUtil.getResponseFromJSON(result);
         if(response.getResultCode() != 0){
             return null;
         }else{
             String model = response.getMODEL();
-            String MANU = model.split(" ")[0].trim();
-            String XH = model.split(" ")[1].trim();
+            String []tmp = model.split(" ");
+            int count = tmp.length;
+            if(count < 2) throw  new Exception("model 格式错误");
+
+            String MANU = tmp[0].trim();
+            String XH = "";
+            for(int i = 1;i < count; i ++){
+                XH = tmp[i].trim() + " ";
+            }
+            XH = XH.trim();
             parameter = new Parameter(response.getIMEI(),response.getMAC(),response.getIMSI(),MANU,XH,response.getVERSION(),response.getPHONE(),response.getANDROIDID(),response.getGPS(),response.getIP());
         }
+
+
+
 //        outModel();
         return parameter;
     }
 
 
-    public static Response updateServerInfo(Parameter parameter,int type){
+    public static Response updateServerInfo(Parameter parameter,int type) throws  Exception{
         //if get false return false
         //if format error return false
         String result = "";
@@ -161,11 +177,10 @@ public class ConfigUtil {
         }
 
         Log.e("input","http result:"+result);
-        if(result==null||result.equals("")){
-            return null;
+        if(result==null||result.equals("")|| result.equals("null")){
+            throw new Exception("网络请求返回为空");
         }
 
-        if(result == null || result.equals("null"))return null;
         //{error:"0",msg:"����ɹ�"}
         Response response = JSONUtil.getResponseFromJSON(result);
 
@@ -314,15 +329,17 @@ public class ConfigUtil {
         return result;
     }
 
-    public static String getRandomIMSI(){
-        String pre = "4600";
-//        String preYD1 = "46000";
-//        String preYD2 = "46002";
-//        String preLT = "46001";
-//        String preDX = "46003";
-        String result = pre+getRandomString("0123",1) + getRandomString(GlobalValue.num,10);
-        return result;
-    }
+//    public static String getRandomIMSI(){
+//
+//        TelephonyManager tm = (TelephonyManager) ConfigUtil.getSystemService(Context.TELEPHONY_SERVICE);
+//        String pre = "4600";
+////        String preYD1 = "46000";
+////        String preYD2 = "46002";
+////        String preLT = "46001";
+////        String preDX = "46003";
+//        String result = pre+getRandomString("0123",1) + getRandomString(GlobalValue.num,10);
+//        return result;
+//    }
 
 
     public static String getRandomVersion(){

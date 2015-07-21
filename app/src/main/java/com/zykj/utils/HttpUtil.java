@@ -27,7 +27,7 @@ public class HttpUtil {
     }
 
 
-    public static String get(){
+    public static String get() throws  Exception{
         String result = null;
         HttpGet get = new HttpGet(GlobalValue.modiParamURL);
         try {
@@ -38,11 +38,12 @@ public class HttpUtil {
         } catch (Exception e) {
             Log.e("input","",e);
             result = null;
+            throw new Exception("联网失败");
         }
         return result;
     }
 
-    public static String updateRandom(Parameter parameter){
+    public static String updateRandom(Parameter parameter) throws  Exception{
         String result = null;
         String updateurl = GlobalValue.randomURL;
         updateurl +=  "&imei="+parameter.getIMEI();
@@ -64,11 +65,12 @@ public class HttpUtil {
         } catch (Exception e) {
             Log.e("input","",e);
             result = null;
+            throw new Exception("上传随机信息联网失败");
         }
         return result;
     }
 
-    public static String verify(Parameter parameter){
+    public static String verify(Parameter parameter) throws  Exception{
         String result = null;
         String updateurl = GlobalValue.updateURL;
         updateurl +=  "&imsi="+parameter.getIMSI();
@@ -83,23 +85,24 @@ public class HttpUtil {
         } catch (Exception e) {
             Log.e("input","",e);
             result = null;
+            throw new Exception("确认服务器信息联网失败");
         }
         return result;
     }
 
-    public static String getIP(){
-        HttpGet get = new HttpGet("http://www.liyongyue.com/getip.php");
-        Log.e("input", "get");
-        try {
-            HttpResponse response = httpClient.execute(get);
-            HttpEntity entity = response.getEntity();
-            String result = EntityUtils.toString(entity);
-            Log.e("input","get end");
-            return result.trim();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
+//    public static String getIP(){
+//        HttpGet get = new HttpGet("http://www.liyongyue.com/getip.php");
+//        Log.e("input", "get");
+//        try {
+//            HttpResponse response = httpClient.execute(get);
+//            HttpEntity entity = response.getEntity();
+//            String result = EntityUtils.toString(entity);
+//            Log.e("input","get end");
+//            return result.trim();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
 
 }
