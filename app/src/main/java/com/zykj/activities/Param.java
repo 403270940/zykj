@@ -10,6 +10,7 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,11 +30,12 @@ public class Param extends ActionBarActivity {
     String ServerParam = "ServerParam";
     String ResotreParam = "ResotreParam";
 
-    int GetParamAction = 0;
-    int ConfirmParamAction = 1;
-    int UploadRandomParamAction = 2;
-    int GetRestoreParamAction = 3;
-    int ConfirmRestoreParamAction = 4;
+    public final int ExceptionAction = -1;
+    public final int GetParamAction = 0;
+    public final int ConfirmParamAction = 1;
+    public final int UploadRandomParamAction = 2;
+    public final int GetRestoreParamAction = 3;
+    public final int ConfirmRestoreParamAction = 4;
 
     String IMEI = "";
     String MAC = "";
@@ -46,10 +48,13 @@ public class Param extends ActionBarActivity {
     String IP = "0.0.0.0";
     String PHONE = "000000000";
     String TASKNAME = "";
+    String DATE = "";
     String curParamStatus = InitialParam;//initialParam  uploadedParam   randomParam  serverParam  restoreParam
     int uploadType = 0;//0 表示当前参数为随机参数 1 表示当前参数为从服务器获取参数  2 代表当前参数是从服务器获取的以前的参数
     boolean ifUploaded = false;
     private TextView showTextView  = null;
+    private EditText dateEditText = null;
+    private EditText taskNameEditText = null;
     private Button OKButton = null;
     private Button CancelButton = null;
     private Button AllRandomButton = null;
@@ -57,51 +62,93 @@ public class Param extends ActionBarActivity {
     private Button RestoreButton = null;
     private String[] areas = new String[]{"全部","玉兰香苑", "张江地铁站", "金科路", "张江路", "紫薇路", "香楠小区" };
 
-    private Handler handler =new Handler(){
+    private Handler responseHandler =new Handler(){
         @Override
-        public void handleMessage(Message msg){
-            super.handleMessage(msg);
-            if(msg.what == 0) {
-                Parameter parameter = (Parameter) msg.obj;
-                if (parameter == null) {
-                    Toast.makeText(getApplicationContext(), "获取服务器参数失败", Toast.LENGTH_LONG).show();
-                    return;
-                }
-                showParameter(parameter);
-                uploadType = 1;
-                Toast.makeText(getApplicationContext(), "获取服务器参数成功", Toast.LENGTH_LONG).show();
-                ifUploaded = false;
-            }else if(msg.what == 1){
-
-                Response response = (Response)msg.obj;
-                if(response != null){
-                    Log.e("input","result String " + response);
+        public void handleMessage(Message msg) {
+            switch (msg.what){
+                case GetParamAction:
+                    Response response = (Response)msg.obj;
                     if(response.getResultCode() == 0){
-                        Toast.makeText(getApplicationContext(), response.getResultString(), Toast.LENGTH_LONG).show();
-                        ifUploaded = true;
-                    }else if(response.getResultCode() == 1){
-                        Toast.makeText(getApplicationContext(), response.getResultString(), Toast.LENGTH_LONG).show();
-                    }else if(response.getResultCode() == 2){
-                        Toast.makeText(getApplicationContext(), response.getResultString(), Toast.LENGTH_LONG).show();
-                    } else{
-                        Toast.makeText(getApplicationContext(), "上传服务器失败，未知错误", Toast.LENGTH_LONG).show();
+                        showParameter(response);
+                        Toast.makeText(getApplicationContext(), "参数保存成功", Toast.LENGTH_LONG).show();
+                    }else{
+                        Toast.makeText(getApplicationContext(), response.getMSG(), Toast.LENGTH_LONG).show();
                     }
-                } else
-                    Toast.makeText(getApplicationContext(), "网络请求失败", Toast.LENGTH_LONG).show();
-            }else if(msg.what == 2){
+                    break;
+                case ConfirmParamAction:
+                    Response confirmParamResponse = (Response)msg.obj;
+                    Toast.makeText(getApplicationContext(), confirmParamResponse.getMSG(), Toast.LENGTH_LONG).show();
+                    break;
+                case UploadRandomParamAction:
+                    Response randomResponse = (Response)msg.obj;
+                    Toast.makeText(getApplicationContext(), randomResponse.getMSG(), Toast.LENGTH_LONG).show();
+                    break;
+                case GetRestoreParamAction:
+                    RestoreResponse restoreResponse = (RestoreResponse)msg.obj;
+                    if(restoreResponse.getCode()==0){
 
-            } else if(msg.what == -1){
-                Exception e = (Exception)msg.obj;
-                Toast.makeText(getApplicationContext(),e.getMessage() , Toast.LENGTH_LONG).show();
+                    }else{
+                        Toast.makeText(getApplicationContext(), restoreResponse.getMsg(), Toast.LENGTH_LONG).show();
+                    }
+                    break;
+                case ConfirmRestoreParamAction:
+                    Response confirmRestoreResponse = (Response)msg.obj;
+                    Toast.makeText(getApplicationContext(), confirmRestoreResponse.getMSG(), Toast.LENGTH_LONG).show();
+                    break;
+                case ExceptionAction:
+                    Exception e = (Exception)msg.obj;
+                    Toast.makeText(getApplicationContext(), e.getMessage().toString(), Toast.LENGTH_LONG).show();
+                    break;
+                default:
+                    Toast.makeText(getApplicationContext(), "未知错误", Toast.LENGTH_LONG).show();
+                    break;
             }
-
         }
     };
 
 
-    Thread thread =  new Thread(){
+//    private Handler handler =new Handler(){
+//        @Override
+//        public void handleMessage(Message msg){
+//            super.handleMessage(msg);
+//            if(msg.what == 0) {
+//                Parameter parameter = (Parameter) msg.obj;
+//                if (parameter == null) {
+//                    Toast.makeText(getApplicationContext(), "获取服务器参数失败", Toast.LENGTH_LONG).show();
+//                    return;
+//                }
+//                showParameter(parameter);
+//                uploadType = 1;
+//                Toast.makeText(getApplicationContext(), "获取服务器参数成功", Toast.LENGTH_LONG).show();
+//                ifUploaded = false;
+//            }else if(msg.what == 1){
+//
+//                Response response = (Response)msg.obj;
+//                if(response != null){
+//                    Log.e("input","result String " + response);
+//                    if(response.getResultCode() == 0){
+//                        Toast.makeText(getApplicationContext(), response.getResultString(), Toast.LENGTH_LONG).show();
+//                        ifUploaded = true;
+//                    }else if(response.getResultCode() == 1){
+//                        Toast.makeText(getApplicationContext(), response.getResultString(), Toast.LENGTH_LONG).show();
+//                    }else if(response.getResultCode() == 2){
+//                        Toast.makeText(getApplicationContext(), response.getResultString(), Toast.LENGTH_LONG).show();
+//                    } else{
+//                        Toast.makeText(getApplicationContext(), "上传服务器失败，未知错误", Toast.LENGTH_LONG).show();
+//                    }
+//                } else
+//                    Toast.makeText(getApplicationContext(), "网络请求失败", Toast.LENGTH_LONG).show();
+//            }else if(msg.what == 2){
+//
+//            } else if(msg.what == -1){
+//                Exception e = (Exception)msg.obj;
+//                Toast.makeText(getApplicationContext(),e.getMessage() , Toast.LENGTH_LONG).show();
+//            }
+//
+//        }
+//    };
 
-    };
+
     View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -148,7 +195,10 @@ public class Param extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_param);
+
         showTextView = (TextView)findViewById(R.id.ShowTextView);
+        dateEditText = (EditText)findViewById(R.id.dateEditText);
+        taskNameEditText = (EditText)findViewById(R.id.taskEditText);
 
         OKButton = (Button)findViewById(R.id.OKButton);
         CancelButton = (Button)findViewById(R.id.CancelButton);
@@ -200,9 +250,8 @@ public class Param extends ActionBarActivity {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        RequestThread requestThread = new RequestThread(0,null);
+                        RequestThread requestThread = new RequestThread(GetParamAction);
                         requestThread.start();
-
                     }
                 }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
             @Override
@@ -211,11 +260,28 @@ public class Param extends ActionBarActivity {
         }).show();
     }
 
-
     private void getRestoreParam(){
-        new AlertDialog.Builder(Param.this).setTitle("选择区域").setItems(areas,new DialogInterface.OnClickListener(){
-            public void onClick(DialogInterface dialog, int which){
-                Toast.makeText(Param.this, "您已经选择了: " + which + ":" + areas[which],Toast.LENGTH_LONG).show();
+        new AlertDialog.Builder(Param.this).setTitle("确认从服务获取参数吗？")
+                .setIcon(android.R.drawable.ic_dialog_info)
+                .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        DATE = dateEditText.getText().toString().trim();
+                        TASKNAME = taskNameEditText.getText().toString().trim();
+                        RequestThread requestThread = new RequestThread(IMSI,DATE,TASKNAME);
+                        requestThread.start();
+
+                    }
+                }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        }).show();
+
+        new AlertDialog.Builder(Param.this).setTitle("选择区域").setItems(areas, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(Param.this, "您已经选择了: " + which + ":" + areas[which], Toast.LENGTH_LONG).show();
                 dialog.dismiss();
             }
         }).show();
@@ -233,86 +299,126 @@ public class Param extends ActionBarActivity {
         IP = ConfigUtil.get("IP");
         PHONE = ConfigUtil.get("PHONE");
         TASKNAME = ConfigUtil.get("TASKNAME");
-        Parameter parameter =  new Parameter(IMEI,MAC,IMSI,MANU,MODEL,VERSION,PHONE,ID,GPS,IP,TASKNAME);
-        curParamStatus = InitialParam;
-        showParameter(parameter);
+        showParameter();
     }
     private boolean saveAllParam(){
         Parameter parameter = new Parameter(IMEI,MAC,IMSI,MANU,MODEL,VERSION,PHONE,ID,GPS,IP,TASKNAME);
         boolean result = ConfigUtil.addParams(parameter);
         result &= XMLUtil.addParameter(parameter);
         if(curParamStatus.equals(ServerParam) ) {
-            String curParamStatus = "";
             RequestThread requestThread = new RequestThread(ConfirmParamAction,parameter);
             requestThread.start();
         }else if(curParamStatus.equals(RandomParam) ) {
-            String curParamStatus = "";
             RequestThread requestThread = new RequestThread(UploadRandomParamAction,parameter);
             requestThread.start();
         }else if(curParamStatus.equals(ResotreParam) ) {
-            String curParamStatus = "";
-            RequestThread requestThread = new RequestThread(ConfirmRestoreParamAction,parameter);
+            RequestThread requestThread = new RequestThread(ConfirmRestoreParamAction,ID);
             requestThread.start();
         }
         return result;
     }
 
     public void showParameter(Parameter parameter){
+        IMEI = parameter.getIMEI();
+        MAC = parameter.getMAC();
+        IMSI = parameter.getIMSI();
+        VERSION = parameter.getVERSION();
+        MANU = parameter.getMANU();
+        MODEL = parameter.getMODEL();
+        ID = parameter.getANDROIDID();
+        GPS = parameter.getGPS();
+        IP = parameter.getIP();
+        PHONE = parameter.getPHONE();
+        TASKNAME = parameter.getTASKNAME();
+        showParameter();
+    }
 
+    public void showParameter(Response response){
+        IMEI = response.getIMEI();
+        MAC = response.getMAC();
+        IMSI = response.getIMSI();
+        VERSION = response.getVERSION();
+        MANU = response.getMODEL().split(" ")[0];
+        MODEL = response.getMODEL().split(" ")[1];
+        ID = response.getANDROIDID();
+        GPS = response.getGPS();
+        IP = response.getIP();
+        PHONE = response.getPHONE();
+        TASKNAME = response.getTASKNAME();
+        showParameter();
+    }
+
+    public void showParameter(){
+        if(!TASKNAME.equals(""))
+            taskNameEditText.setText(TASKNAME);
         String info = "";
-        info += "IMEI:"+parameter.getIMEI() +"\n";
-        info += "MAC:"+parameter.getMAC() +"\n";
-        info += "IMSI:"+parameter.getIMSI() +"\n";
-        info += "VERSION:"+parameter.getVERSION() +"\n";
-        info += "MANU:"+parameter.getMANU() +"\n";
-        info += "MODEL:"+parameter.getMODEL() +"\n";
-        info += "ID:"+parameter.getANDROIDID() +"\n";
-        info += "GPS:"+parameter.getGPS() +"\n";
-        info += "IP:"+parameter.getIP() +"\n";
-        info += "PHONE:"+parameter.getPHONE();
+        info += "IMEI:"+ IMEI +"\n";
+        info += "MAC:"+ MAC +"\n";
+        info += "IMSI:"+ IMSI +"\n";
+        info += "VERSION:"+ VERSION +"\n";
+        info += "MANU:"+ MANU +"\n";
+        info += "MODEL:"+ MODEL +"\n";
+        info += "ID:"+ ID +"\n";
+        info += "GPS:"+ GPS +"\n";
+        info += "IP:"+ IP +"\n";
+        info += "PHONE:"+ PHONE;
         showTextView.setText(info);
     }
 
     class RequestThread extends Thread{
-        String requestType;//getParam   uploadparam  confirmparam restoreparam  confirmresotreparam
         int requestAction;//0 代表从服务器获取参数  1 代表将当前设置参数上传给服务器  2 代表获取以前的参数
-        Object uploadObject;
-
-        public RequestThread(String requestType){
-            this.requestType = requestType;
-        }
-
-        public RequestThread(int requestAction,Object uploadObject){
+        Parameter uploadParameter;
+        String restoreID;
+        String IMSI;
+        String date;
+        String taskname;
+        public RequestThread(int requestAction){
             this.requestAction = requestAction;
-            this.uploadObject = uploadObject;
         }
+        public RequestThread(int requestAction,String restoreID){
+            this.requestAction = requestAction;
+            this.restoreID = restoreID;
+        }
+        public RequestThread(int requestAction, Parameter uploadParameter){
+            this.requestAction = requestAction;
+            this.uploadParameter = uploadParameter;
+        }
+        public RequestThread(String IMSI,String date,String taskname){
+            this.IMSI = IMSI;
+            this.date = date;
+            this.taskname = taskname;
+        }
+
         @Override
         public void run(){
             try{
-                if(requestAction == GetParamAction){
-                    Parameter parameter = ConfigUtil.getServerInfo(IMSI);
-                    //handler.sendEmptyMessage(0);
-                    Message msg = new Message();
-                    msg.what = 0;
-                    msg.obj = parameter;
-                    handler.sendMessage(msg);
-
-                }else if(requestAction == 1){
-
-                    Response result = ConfigUtil.updateServerInfo((Parameter)uploadObject, uploadType);
-//            handler.sendEmptyMessage(0);
-                    Message msg = new Message();
-                    msg.what = 1;
-                    msg.obj = result;
-                    handler.sendMessage(msg);
-                }else if(requestAction == GetRestoreParamAction){
-                    RestoreResponse restoreResponse = ConfigUtil.getRestoreResponse();
+                Message msg = new Message();
+                msg.what = requestAction;
+                switch (requestAction){
+                    case GetParamAction:
+                        msg.obj =ConfigUtil.getServerParam(IMSI);
+                        break;
+                    case ConfirmParamAction:
+                        msg.obj =  ConfigUtil.confirmParam(uploadParameter);
+                        break;
+                    case UploadRandomParamAction:
+                        msg.obj =  ConfigUtil.uploadRandomParam(uploadParameter);
+                        break;
+                    case GetRestoreParamAction:
+                        msg.obj =   ConfigUtil.getRestoreResponse(IMSI,date, taskname);
+                        break;
+                    case ConfirmRestoreParamAction:
+                        msg.obj =  ConfigUtil.confirmRestoreParam(restoreID);
+                        break;
+                    default:
+                        break;
                 }
+                responseHandler.sendMessage(msg);
             }catch (Exception e){
                 Message msg = new Message();
                 msg.what = -1;
                 msg.obj = e;
-                handler.sendMessage(msg);
+                responseHandler.sendMessage(msg);
             }
         }
     }

@@ -116,42 +116,43 @@ public class ConfigUtil {
         }
 
     }
-    public static RestoreResponse getRestoreResponse() throws  Exception{
+    public static RestoreResponse getRestoreResponse(String IMSI,String date,String taskname) throws  Exception{
         RestoreResponse restoreResponse  = null;
 
         return restoreResponse;
     }
 
-    public static Parameter getServerInfo(String IMSI) throws  Exception{
-        //if get false return false
-        //if format error return false
-        Parameter parameter = null;
+//    public static Parameter getServerInfo(String IMSI) throws  Exception{
+//        //if get false return false
+//        //if format error return false
+//        Parameter parameter = null;
+//
+//        String result = HttpUtil.requestModiParam(IMSI);
+//        Log.e("input", "http result:" + result);
+//        if(result == null || result.equals("null")){
+//            throw new Exception("网络请求返回为空");
+//        }
+//        Response response = JSONUtil.getResponseFromJSON(result);
+//        if(response.getResultCode() != 0){
+//            return null;
+//        }else{
+//            String model = response.getMODEL();
+//            String []tmp = model.split(" ");
+//            int count = tmp.length;
+//            if(count < 2) throw  new Exception("model 格式错误");
+//
+//            String MANU = tmp[0].trim();
+//            String XH = "";
+//            for(int i = 1;i < count; i ++){
+//                XH = tmp[i].trim() + " ";
+//            }
+//            XH = XH.trim();
+//            parameter = new Parameter(response.getIMEI(),response.getMAC(),response.getIMSI(),MANU,XH,response.getVERSION(),response.getPHONE(),response.getANDROIDID(),response.getGPS(),response.getIP(),response.getTASKNAME());
+//        }
+//        return parameter;
+//    }
 
-        String result = HttpUtil.requestModiParam(IMSI);
-        Log.e("input", "http result:" + result);
-        if(result == null || result.equals("null")){
-            throw new Exception("网络请求返回为空");
-        }
-        Response response = JSONUtil.getResponseFromJSON(result);
-        if(response.getResultCode() != 0){
-            return null;
-        }else{
-            String model = response.getMODEL();
-            String []tmp = model.split(" ");
-            int count = tmp.length;
-            if(count < 2) throw  new Exception("model 格式错误");
-
-            String MANU = tmp[0].trim();
-            String XH = "";
-            for(int i = 1;i < count; i ++){
-                XH = tmp[i].trim() + " ";
-            }
-            XH = XH.trim();
-            parameter = new Parameter(response.getIMEI(),response.getMAC(),response.getIMSI(),MANU,XH,response.getVERSION(),response.getPHONE(),response.getANDROIDID(),response.getGPS(),response.getIP(),response.getTASKNAME());
-        }
-        return parameter;
-    }
-    public static Response getServerParam() throws Exception{
+    public static Response getServerParam(String IMSI) throws Exception{
         Response response = null;
         String result = HttpUtil.requestModiParam(IMSI);
         response = JSONUtil.getResponseFromJSON(result);
