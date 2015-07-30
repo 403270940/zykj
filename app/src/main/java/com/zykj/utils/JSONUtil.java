@@ -3,6 +3,7 @@ package com.zykj.utils;
 import android.util.Log;
 
 import com.zykj.entities.Response;
+import com.zykj.entities.RestoreResponse;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,7 +36,8 @@ public class JSONUtil {
             String IMSI = joj.getString("imsi");
             String IP = joj.getString("ip");
             String PHONE = joj.getString("phone");
-            response = new Response(resultcode,IMEI,MAC,ANDROIDID,MODEL,GPS,VERSION,IMSI,IP,PHONE);
+            String TASKNAME = joj.getString("taskname");
+            response = new Response(resultcode,IMEI,MAC,ANDROIDID,MODEL,GPS,VERSION,IMSI,IP,PHONE,TASKNAME);
             }else{
                 String msg = joj.getString("msg");
                 if(msg == null)return null;
@@ -47,4 +49,12 @@ public class JSONUtil {
         }
         return response;
     }
+
+    public static RestoreResponse getRestoreResponseFromJSON(String json)throws Exception{
+        RestoreResponse response = null;
+        JSONObject joj = new JSONObject(json);
+        Log.e("input",joj.toString());
+        return response;
+    }
+
 }

@@ -10,6 +10,8 @@ public class GlobalValue {
     public static final String upCase = lowerCase.toUpperCase();
     public static final String num = "0123456789";
     public static String modiParamURL = "http://115.236.65.83:8080/topup/mobileParameterServlet?method=requestModiParam";
-    public static String updateURL = "http://115.236.65.83:8080/topup/mobileParameterServlet?method=confirmModiParam";
+    public static String confirmModiParamURL =  "http://115.236.65.83:8080/topup/mobileParameterServlet?method=confirmModiParam";
     public static String randomURL = "http://115.236.65.83:8080/topup/mobileParameterServlet?method=randomMobileParam";
+    public static String restoreParamURL ="http://115.236.65.83:8080/topup/mobileParameterServlet?method=requestRestoreParam";
+    public static String confirmRestoreParamURL = "http://115.236.65.83:8080/topup/mobileParameterServlet?method=confirmRestoreParam";
 }

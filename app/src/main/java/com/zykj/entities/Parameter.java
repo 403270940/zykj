@@ -18,8 +18,9 @@ public class Parameter {
     private String ANDROIDID;
     private String IP;
     private String PHONE;
+    private String TASKNAME;
 
-    public Parameter(String IMEI, String MAC, String IMSI, String MANU, String MODEL, String VERSION, String PHONE,String ANDROIDID, String GPS,String IP) {
+    public Parameter(String IMEI, String MAC, String IMSI, String MANU, String MODEL, String VERSION, String PHONE,String ANDROIDID, String GPS,String IP,String TASKNAME) {
         this.IMEI = IMEI;
         this.MAC = MAC;
         this.IMSI = IMSI;
@@ -30,6 +31,7 @@ public class Parameter {
         this.ANDROIDID = ANDROIDID;
         this.GPS = GPS;
         this.IP = IP;
+        this.TASKNAME = TASKNAME;
     }
 
 
@@ -111,5 +113,13 @@ public class Parameter {
 
     public void setVERSION(String VERSION) {
         this.VERSION = VERSION;
+    }
+
+    public String getTASKNAME() {
+        return TASKNAME;
+    }
+
+    public void setTASKNAME(String TASKNAME) {
+        this.TASKNAME = TASKNAME;
     }
 }

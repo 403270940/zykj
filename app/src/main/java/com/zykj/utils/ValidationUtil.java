@@ -28,9 +28,6 @@ public class ValidationUtil {
             pattern = Pattern.compile(MACReg);
         }
         if(key.equals("IMSI")){
-            pattern = Pattern.compile(IMSIReg);
-        }
-        if(key.equals("IMSI")){
            return true;
         }
         if(key.equals("VERSION")){

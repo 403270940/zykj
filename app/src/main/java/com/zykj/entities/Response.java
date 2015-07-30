@@ -16,13 +16,13 @@ public class Response {
     private String IMSI;
     private String IP;
     private String PHONE;
-
+    private String TASKNAME;
     public Response(int resultCode, String resultString){
         this.resultCode = resultCode;
         this.MSG = resultString;
     }
 
-    public Response(int resultCode, String IMEI, String MAC, String ANDROIDID, String MODEL, String GPS, String VERSION, String IMSI, String IP, String PHONE) {
+    public Response(int resultCode, String IMEI, String MAC, String ANDROIDID, String MODEL, String GPS, String VERSION, String IMSI, String IP, String PHONE,String TASKNAME) {
         this.resultCode = resultCode;
         this.IMEI = IMEI;
         this.MAC = MAC;
@@ -33,6 +33,7 @@ public class Response {
         this.IMSI = IMSI;
         this.IP = IP;
         this.PHONE = PHONE;
+        this.TASKNAME = TASKNAME;
     }
 
     public int getResultCode() {
@@ -123,6 +124,22 @@ public class Response {
         this.PHONE = PHONE;
     }
 
+    public String getMSG() {
+        return MSG;
+    }
+
+    public void setMSG(String MSG) {
+        this.MSG = MSG;
+    }
+
+    public String getTASKNAME() {
+        return TASKNAME;
+    }
+
+    public void setTASKNAME(String TASKNAME) {
+        this.TASKNAME = TASKNAME;
+    }
+
     @Override
     public String toString() {
         if(resultCode == 0 && MSG!=null){
@@ -138,6 +155,7 @@ public class Response {
                     ", IP='" + IP + '\'' +
                     ", PHONE='" + PHONE + '\'' +
                     ", MSG='" + MSG + '\'' +
+                    ", TASKNAME='" + TASKNAME + '\'' +
                     '}';
         }else{
             return "Response{" +
