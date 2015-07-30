@@ -151,8 +151,39 @@ public class ConfigUtil {
         }
         return parameter;
     }
+    public static Response getServerParam() throws Exception{
+        Response response = null;
+        String result = HttpUtil.requestModiParam(IMSI);
+        response = JSONUtil.getResponseFromJSON(result);
+        return response;
+    }
+    public static Response confirmParam(Parameter parameter) throws Exception{
+        Response response = null;
+        String result = HttpUtil.confirmModiParam(parameter.getIMSI(),parameter.getPHONE());
+        response = JSONUtil.getResponseFromJSON(result);
+        return response;
+    }
 
+    public static Response uploadRandomParam(Parameter parameter) throws Exception{
+        Response response = null;
+        String result = HttpUtil.randomMobileParam(parameter);
+        response = JSONUtil.getResponseFromJSON(result);
+        return response;
+    }
 
+    public static RestoreResponse getRestoreParam(String IMSI,String date,String taskname) throws Exception{
+        RestoreResponse restoreResponse = null;
+        String result = HttpUtil.requestRestoreParam(IMSI, date,taskname);
+        restoreResponse = JSONUtil.getRestoreResponseFromJSON(result);
+        return restoreResponse;
+    }
+
+    public static Response confirmRestoreParam(String ID) throws Exception{
+        Response response = null;
+        String result = HttpUtil.requestRestoreParam(ID);
+        response = JSONUtil.getResponseFromJSON(result);
+        return response;
+    }
     public static Response updateServerInfo(Parameter parameter,int type) throws  Exception{
         //if get false return false
         //if format error return false
