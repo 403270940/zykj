@@ -2,6 +2,8 @@ package com.zykj.utils;
 
 /**
  * Created by yli on 2015/7/9.
+ * 该类用于定义一些全局变量
+ * 若有需要可将该类中的值放入配置文件中
  */
 public class GlobalValue {
         //&imei=355065153311231&mac=F2:DD:EF:E8:13:F6&androidid=hche0ifej5hj3e2e&model=HUAWEIG610-T11&gps=120.104776,30.290787&version=G610-T11V100R001CHNC01B127&ip=183.128.174.125&imsi=460077577717831&phone=15757784615

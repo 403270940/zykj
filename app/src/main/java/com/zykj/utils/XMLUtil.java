@@ -21,6 +21,7 @@ import java.util.List;
 
 /**
  * Created by yli on 2015/7/17.
+ * 该类用于将修改的参数写入xml文件中用于记录。
  */
 public class XMLUtil {
 
@@ -84,7 +85,9 @@ public class XMLUtil {
             in.close();
             Element phones = doc.select("phones").first();
             Element phone = phones.appendElement("phone");
-// (String IMEI, String MAC, String IMSI, String MANU, String MODEL, String VERSION, String PHONE,String ANDROIDID, String GPS,String IP)
+
+            Element TASKNAME = phone.appendElement("TASKNAME");
+            TASKNAME.appendText(parameter.getTASKNAME());
             Element IMEI = phone.appendElement("IMEI");
             IMEI.appendText(parameter.getIMEI());
             Element MAC = phone.appendElement("MAC");

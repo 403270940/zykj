@@ -1,16 +1,13 @@
 package com.zykj.utils;
 
-import android.content.Context;
 import android.os.Environment;
 
-import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.zykj.entities.Parameter;
 import com.zykj.entities.Response;
 import com.zykj.entities.RestoreResponse;
 
-import org.apache.http.protocol.HTTP;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -24,12 +21,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Properties;
-import java.util.Random;
 
 /**
  * Created by Administrator on 2015/7/6.
+ * 该类是用于处理参数信息的工具类
  */
 public class ConfigUtil {
 
@@ -174,40 +170,40 @@ public class ConfigUtil {
 
     public static RestoreResponse getRestoreParam(String IMSI,String date,String taskname) throws Exception{
         RestoreResponse restoreResponse = null;
-        String result = HttpUtil.requestRestoreParam(IMSI, date,taskname);
+        String result = HttpUtil.getRestoreParam(IMSI, date, taskname);
         restoreResponse = JSONUtil.getRestoreResponseFromJSON(result);
         return restoreResponse;
     }
 
-    public static Response confirmRestoreParam(String ID) throws Exception{
+    public static Response confirmRestoreParam(int ID) throws Exception{
         Response response = null;
-        String result = HttpUtil.requestRestoreParam(ID);
+        String result = HttpUtil.confirmRestoreParam(ID);
         response = JSONUtil.getResponseFromJSON(result);
         return response;
     }
-    public static Response updateServerInfo(Parameter parameter,int type) throws  Exception{
-        //if get false return false
-        //if format error return false
-        String result = "";
-        if(type == 1){//verify parameter
-            result = HttpUtil.confirmModiParam(parameter.getIMSI(),parameter.getPHONE());
-        }
-        if(type == 0){
-            result = HttpUtil.randomMobileParam(parameter);
-        }
-
-        Log.e("input","http result:"+result);
-        if(result==null||result.equals("")|| result.equals("null")){
-            throw new Exception("网络请求返回为空");
-        }
-
-        //{error:"0",msg:"����ɹ�"}
-        Response response = JSONUtil.getResponseFromJSON(result);
-
-        return response;
-//        outModel();
-
-    }
+//    public static Response updateServerInfo(Parameter parameter,int type) throws  Exception{
+//        //if get false return false
+//        //if format error return false
+//        String result = "";
+//        if(type == 1){//verify parameter
+//            result = HttpUtil.confirmModiParam(parameter.getIMSI(),parameter.getPHONE());
+//        }
+//        if(type == 0){
+//            result = HttpUtil.randomMobileParam(parameter);
+//        }
+//
+//        Log.e("input","http result:"+result);
+//        if(result==null||result.equals("")|| result.equals("null")){
+//            throw new Exception("网络请求返回为空");
+//        }
+//
+//        //{error:"0",msg:"����ɹ�"}
+//        Response response = JSONUtil.getResponseFromJSON(result);
+//
+//        return response;
+////        outModel();
+//
+//    }
 
 
     public static String get(String key){

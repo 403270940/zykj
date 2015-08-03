@@ -2,12 +2,11 @@ package com.zykj.entities;
 
 /**
  * Created by yli on 2015/7/17.
+ * è¯¥ç±»æ˜¯å‚æ•°ä¿¡æ¯çš„å®ä½“ç±»
  */
 public class Parameter {
 
-    //ĞèÒªÄ£ÄâĞÅÏ¢ÓĞ£ºIMEIºÅ£¬ÊÖ»úºÅ£¬SIM¿¨´®¿ÚºÅ£¬·ûºÏiso±ê×¢µÄ¹ú¼ÒÂë£¬
-    // SIM¿¨Ìá¹©ÉÌµÄÒÆ¶¯¹ú¼ÒÂë£¬·şÎñÔËÓªÉÌµÄÃû³Æ£¬
-    // ÊÖ»úĞÍºÅ£¬SDK°æ±¾ºÅ£¬²Ù×÷ÏµÍ³°æ±¾£¬ÊÖ»úMACµØÖ·
+
     private String IMEI;
     private String MAC;
     private String IMSI;

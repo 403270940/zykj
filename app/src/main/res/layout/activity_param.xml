@@ -71,30 +71,35 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="确定"
+            android:layout_weight="1"
             android:id="@+id/OKButton" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="取消"
             android:id="@+id/CancelButton" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="随机"
             android:id="@+id/ALLRandomButton" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="服务器"
             android:id="@+id/ServerGetButton" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="恢复指定"
+            android:layout_weight="1"
+            android:text="恢复"
             android:id="@+id/restoreButton" />
     </LinearLayout>
 

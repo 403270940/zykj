@@ -2,6 +2,7 @@ package com.zykj.entities;
 
 /**
  * Created by yli on 2015/7/17.
+ * 该类是返回结果的实体类
  */
 public class Response {
 

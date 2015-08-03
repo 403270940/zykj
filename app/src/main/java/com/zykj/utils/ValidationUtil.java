@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 
 /**
  * Created by yli on 2015/7/9.
+ * 该类用于验证参数的合法性，暂时未用
  */
 public class ValidationUtil {
 

@@ -22,6 +22,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
 /**
  * Created by yli on 2015/6/29.
+ * è¯¥ç±»æ˜¯ä½¿ç”¨xposedæ¡†æ¶ä¿®æ”¹æ‰‹æœºå‚æ•°ç±»
  */
 public class WZUtil implements IXposedHookLoadPackage{
 
@@ -34,7 +35,7 @@ public class WZUtil implements IXposedHookLoadPackage{
         XposedBridge.log(s);
     }
 
-    //²»´ø²ÎÊıµÄ·½·¨À¹½Ø
+    //ä¸å¸¦å‚æ•°çš„æ–¹æ³•æ‹¦æˆª
     private void hook_method(Class<?> clazz, String methodName, Object... parameterTypesAndCallback)
     {
         try {
@@ -44,7 +45,7 @@ public class WZUtil implements IXposedHookLoadPackage{
         }
     }
 
-    //²»´ø²ÎÊıµÄ·½·¨À¹½Ø
+    //ä¸å¸¦å‚æ•°çš„æ–¹æ³•æ‹¦æˆª
     private void hook_method(String className, ClassLoader classLoader, String methodName,
                              Object... parameterTypesAndCallback)
     {
@@ -55,7 +56,7 @@ public class WZUtil implements IXposedHookLoadPackage{
         }
     }
 
-    //´ø²ÎÊıµÄ·½·¨À¹½Ø
+    //å¸¦å‚æ•°çš„æ–¹æ³•æ‹¦æˆª
     private void hook_methods(String className, String methodName, XC_MethodHook xmh)
     {
         try {
@@ -153,14 +154,14 @@ public class WZUtil implements IXposedHookLoadPackage{
                     Log.e("input after hook", param.getResult().toString());
                 }
             });
-            XposedBridge.log("-----------Ã»ÓĞ±£»¤£¬ËùÒÔ»ñÈ¡ÊÇ¼ÙµØÖ·£º" + mLpp.packageName);
+            XposedBridge.log("-----------æ²¡æœ‰ä¿æŠ¤ï¼Œæ‰€ä»¥è·å–æ˜¯å‡åœ°å€ï¼š" + mLpp.packageName);
 
 
             hook_method("android.net.wifi.WifiManager", mLpp.classLoader, "getScanResults",
                     new XC_MethodHook() {
                         /**
-                         * AndroidÌá¹©ÁË»ùÓÚÍøÂçµÄ¶¨Î»·şÎñºÍ»ùÓÚÎÀĞÇµÄ¶¨Î»·şÎñÁ½ÖÖ
-                         * android.net.wifi.WifiManagerµÄgetScanResults·½·¨
+                         * Androidæä¾›äº†åŸºäºç½‘ç»œçš„å®šä½æœåŠ¡å’ŒåŸºäºå«æ˜Ÿçš„å®šä½æœåŠ¡ä¸¤ç§
+                         * android.net.wifi.WifiManagerçš„getScanResultsæ–¹æ³•
                          * Return the results of the latest access point scan.
                          * @return the list of access points found in the most recent scan.
                          */
@@ -176,7 +177,7 @@ public class WZUtil implements IXposedHookLoadPackage{
             hook_method("android.telephony.TelephonyManager", mLpp.classLoader, "getCellLocation",
                     new XC_MethodHook() {
                         /**
-                         * android.telephony.TelephonyManagerµÄgetCellLocation·½·¨
+                         * android.telephony.TelephonyManagerçš„getCellLocationæ–¹æ³•
                          * Returns the current location of the device.
                          * Return null if current location is not available.
                          */
@@ -192,7 +193,7 @@ public class WZUtil implements IXposedHookLoadPackage{
             hook_method("android.telephony.TelephonyManager", mLpp.classLoader, "getNeighboringCellInfo",
                     new XC_MethodHook() {
                         /**
-                         * android.telephony.TelephonyManagerÀàµÄgetNeighboringCellInfo·½·¨
+                         * android.telephony.TelephonyManagerç±»çš„getNeighboringCellInfoæ–¹æ³•
                          * Returns the neighboring cell information of the device.
                          */
                         @Override
@@ -207,8 +208,8 @@ public class WZUtil implements IXposedHookLoadPackage{
             hook_methods("android.location.LocationManager", "requestLocationUpdates",
                     new XC_MethodHook() {
                         /**
-                         * android.location.LocationManagerÀàµÄrequestLocationUpdates·½·¨
-                         * Æä²ÎÊıÓĞ4¸ö£º
+                         * android.location.LocationManagerç±»çš„requestLocationUpdatesæ–¹æ³•
+                         * å…¶å‚æ•°æœ‰4ä¸ªï¼š
                          * String provider, long minTime, float minDistance,LocationListener listener
                          * Register for location updates using the named provider, and a pending intent
                          */
@@ -216,7 +217,7 @@ public class WZUtil implements IXposedHookLoadPackage{
                         protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
 
                             if (param.args.length == 4 && (param.args[0] instanceof String)) {
-                                //Î»ÖÃ¼àÌıÆ÷,µ±Î»ÖÃ¸Ä±äÊ±»á´¥·¢onLocationChanged·½·¨
+                                //ä½ç½®ç›‘å¬å™¨,å½“ä½ç½®æ”¹å˜æ—¶ä¼šè§¦å‘onLocationChangedæ–¹æ³•
                                 LocationListener ll = (LocationListener) param.args[3];
 
                                 Class<?> clazz = LocationListener.class;
@@ -258,8 +259,8 @@ public class WZUtil implements IXposedHookLoadPackage{
                         hook_methods("android.location.LocationManager","getGpsStatus",
                                              new XC_MethodHook() {
                             /**
-                             * android.location.LocationManagerÀàµÄgetGpsStatus·½·¨
-                             * Æä²ÎÊıÖ»ÓĞ1¸ö£ºGpsStatus status
+                             * android.location.LocationManagerç±»çš„getGpsStatusæ–¹æ³•
+                             * å…¶å‚æ•°åªæœ‰1ä¸ªï¼šGpsStatus status
                              * Retrieves information about the current status of the GPS engine.
                              * This should only be called from the {@link GpsStatus.Listener#onGpsStatusChanged}
                              * callback to ensure that the data is copied atomically.

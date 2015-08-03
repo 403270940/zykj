@@ -2,14 +2,20 @@ package com.zykj.utils;
 
 import android.util.Log;
 
+import com.zykj.entities.Parameter;
 import com.zykj.entities.Response;
 import com.zykj.entities.RestoreResponse;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by yli on 2015/7/17.
+ * 该类是处理返回json结果的工具类
  */
 public class JSONUtil {
 
@@ -45,15 +51,47 @@ public class JSONUtil {
             }
         }catch (Exception e){
             Log.e("input","",e);
-            throw  new Exception("�������󷵻ظ�ʽ���󣬷��ؽ����" + json);
+            throw  new Exception("网络请求返回格式错误，返回结果：" + json);
         }
         return response;
     }
 
     public static RestoreResponse getRestoreResponseFromJSON(String json)throws Exception{
-        RestoreResponse response = null;
-        JSONObject joj = new JSONObject(json);
-        Log.e("input",joj.toString());
+        RestoreResponse response = new RestoreResponse();
+        List<Parameter> parameterList = new ArrayList<Parameter>();
+        try {
+            JSONObject joj = new JSONObject(json);
+            int code = joj.getInt("error");
+            response.setCode(code);
+            if(code == 0){
+                JSONArray dataArray = joj.getJSONArray("data");
+                for(int i = 0; i < dataArray.length();i++){
+                    JSONObject dataObject = (JSONObject)dataArray.get(i);
+                    String IMEI = dataObject.getString("imei");
+                    String MAC = dataObject.getString("mac");
+                    String ANDROIDID = dataObject.getString("androidid");
+                    String TMP = dataObject.getString("model");
+                    String MANU = TMP.split(" ")[0];
+                    String MODEL = TMP.split(" ")[1];
+                    String GPS = dataObject.getString("gps");
+                    String VERSION = dataObject.getString("version");
+                    String IMSI = dataObject.getString("imsi");
+                    String IP = dataObject.getString("ip");
+                    String PHONE = dataObject.getString("phone");
+                    String TASKNAME = dataObject.getString("taskname");
+                    Parameter parameter = new Parameter(IMEI,MAC,IMSI,MANU,MODEL,VERSION,PHONE,ANDROIDID,GPS,IP,TASKNAME);
+                    response.addParameter(parameter);
+                }
+            }else{
+                String MSG = joj.getString("msg");
+                response.setMsg(MSG);
+            }
+            Log.e("input",joj.toString());
+        }catch (Exception e){
+            throw new Exception("返回结果格式不正确");
+        }
+
+
         return response;
     }
 

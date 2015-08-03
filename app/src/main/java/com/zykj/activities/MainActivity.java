@@ -11,6 +11,9 @@ import com.liyongyue.zykj.R;
 
 public class MainActivity extends ActionBarActivity {
 
+    /*
+     * 该类并不做实质性操作，只是调用paramactivity
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

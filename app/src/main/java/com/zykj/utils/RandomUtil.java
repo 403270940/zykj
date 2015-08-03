@@ -25,6 +25,7 @@ import java.util.Random;
 
 /**
  * Created by yli on 2015/7/30.
+ * 该类是用于产生随机参数的工具类
  */
 public class RandomUtil {
 
@@ -92,7 +93,7 @@ public class RandomUtil {
         }
         MODEL = MODEL.trim();
         String VERSION = getRandomVersion();
-        String PHONE = "13888888888";
+        String PHONE = "15825413423";
         String ANDROIDID = getRandomID();
         String GPS = getRandomGPS();
         String IP = "1.1.1.1";

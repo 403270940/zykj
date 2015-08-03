@@ -24,74 +24,85 @@ import com.zykj.utils.XMLUtil;
 
 
 public class Param extends ActionBarActivity {
-    String InitialParam = "InitialParam";
-    String UploadedParam = "UploadedParam";
-    String RandomParam = "RandomParam";
-    String ServerParam = "ServerParam";
-    String ResotreParam = "ResotreParam";
+    public String InitialParam = "InitialParam";//初始化参数
+    public String UploadedParam = "UploadedParam";//已上传参数
+    public String RandomParam = "RandomParam";//随机参数
+    public String ServerParam = "ServerParam";//服务器获取参数
+    public String ResotreParam = "ResotreParam";//恢复的参数
 
     public final int ExceptionAction = -1;
-    public final int GetParamAction = 0;
-    public final int ConfirmParamAction = 1;
-    public final int UploadRandomParamAction = 2;
-    public final int GetRestoreParamAction = 3;
-    public final int ConfirmRestoreParamAction = 4;
+    public final int GetParamAction = 0;//获取服务器参数
+    public final int ConfirmParamAction = 1;//确认服务器参数
+    public final int UploadRandomParamAction = 2;//上传随机参数
+    public final int GetRestoreParamAction = 3;//恢复指定参数
+    public final int ConfirmRestoreParamAction = 4;//确认恢复参数
 
-    String IMEI = "";
-    String MAC = "";
-    String IMSI = "";
-    String VERSION = "";
-    String MANU = "";
-    String MODEL = "";
-    String ID = "";
-    String GPS = "";
-    String IP = "0.0.0.0";
-    String PHONE = "000000000";
-    String TASKNAME = "";
-    String DATE = "";
-    String curParamStatus = InitialParam;//initialParam  uploadedParam   randomParam  serverParam  restoreParam
-    int uploadType = 0;//0 表示当前参数为随机参数 1 表示当前参数为从服务器获取参数  2 代表当前参数是从服务器获取的以前的参数
-    boolean ifUploaded = false;
-    private TextView showTextView  = null;
-    private EditText dateEditText = null;
-    private EditText taskNameEditText = null;
-    private Button OKButton = null;
-    private Button CancelButton = null;
-    private Button AllRandomButton = null;
-    private Button ServerGetButton = null;
-    private Button RestoreButton = null;
-    private String[] areas = new String[]{"全部","玉兰香苑", "张江地铁站", "金科路", "张江路", "紫薇路", "香楠小区" };
+    public String IMEI = "";
+    public String MAC = "";
+    public String IMSI = "";
+    public String VERSION = "";
+    public String MANU = "";
+    public String MODEL = "";
+    public String ID = "";
+    public String GPS = "";
+    public String IP = "0.0.0.0";
+    public String PHONE = "13888888888";
+    public String TASKNAME = "";
+    public String DATE = "";
+    public String curParamStatus = InitialParam;//用于记录当前显示的参数是何种参数
 
+    private static int curselect = 0;//当前选择的恢复参数的ID,如恢复参数 时返回3个参数，用户选择了第2个，则保存为1
+
+    private TextView showTextView  = null;//显示参数TextView
+    private EditText dateEditText = null;//日期编辑控件
+    private EditText taskNameEditText = null;//任务名控件
+    private Button OKButton = null;//确认控件
+    private Button CancelButton = null;//重置控件
+    private Button AllRandomButton = null;//全部随机控件
+    private Button ServerGetButton = null;//获取服务器参数控件
+    private Button RestoreButton = null;//恢复指定参数控件
+
+    /*
+     *responseHandler 是用来出来网络请求后的返回结果
+     * 根据msg.what来判断该结果是调用什么网络接口后的结果，msg.obj是返回的结果
+     *  GetParamAction 表示该结果是获取服务器参数返回的参数信息，接口1
+     *  ConfirmParamAction表示该结果是确认服务器参数的结果，接口2
+     *  UploadRandomParamAction表示该结果是上传随机参数的返回结果，接口3
+     *  GetRestoreParamAction 表示该结果是恢复指定参数的返回结果
+     *  ConfirmRestoreParamAction 表示该结果是确定恢复参数的返回结果
+     *
+     */
     private Handler responseHandler =new Handler(){
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what){
-                case GetParamAction:
+                case GetParamAction://获取服务器参数的返回结果
                     Response response = (Response)msg.obj;
                     if(response.getResultCode() == 0){
-                        showParameter(response);
-                        Toast.makeText(getApplicationContext(), "参数保存成功", Toast.LENGTH_LONG).show();
+                        showParameter(response);//如果code为0，则说明获取参数成功，显示参数
+                        curParamStatus = ServerParam;
+                        Toast.makeText(getApplicationContext(), "参数获取成功", Toast.LENGTH_LONG).show();
                     }else{
                         Toast.makeText(getApplicationContext(), response.getMSG(), Toast.LENGTH_LONG).show();
                     }
                     break;
-                case ConfirmParamAction:
+                case ConfirmParamAction://确认获取服务器参数的返回结果
                     Response confirmParamResponse = (Response)msg.obj;
                     Toast.makeText(getApplicationContext(), confirmParamResponse.getMSG(), Toast.LENGTH_LONG).show();
                     break;
-                case UploadRandomParamAction:
+                case UploadRandomParamAction://上传随机参数的返回结果
                     Response randomResponse = (Response)msg.obj;
                     Toast.makeText(getApplicationContext(), randomResponse.getMSG(), Toast.LENGTH_LONG).show();
                     break;
-                case GetRestoreParamAction:
+                case GetRestoreParamAction://获取指定条件的所有恢复参数的返回结果
                     RestoreResponse restoreResponse = (RestoreResponse)msg.obj;
                     if(restoreResponse.getCode()==0){
-
+                        showRestoreParameter(restoreResponse);
                     }else{
                         Toast.makeText(getApplicationContext(), restoreResponse.getMsg(), Toast.LENGTH_LONG).show();
                     }
                     break;
-                case ConfirmRestoreParamAction:
+                case ConfirmRestoreParamAction://确认恢复指定参数的返回结果
                     Response confirmRestoreResponse = (Response)msg.obj;
                     Toast.makeText(getApplicationContext(), confirmRestoreResponse.getMSG(), Toast.LENGTH_LONG).show();
                     break;
@@ -107,57 +118,18 @@ public class Param extends ActionBarActivity {
     };
 
 
-//    private Handler handler =new Handler(){
-//        @Override
-//        public void handleMessage(Message msg){
-//            super.handleMessage(msg);
-//            if(msg.what == 0) {
-//                Parameter parameter = (Parameter) msg.obj;
-//                if (parameter == null) {
-//                    Toast.makeText(getApplicationContext(), "获取服务器参数失败", Toast.LENGTH_LONG).show();
-//                    return;
-//                }
-//                showParameter(parameter);
-//                uploadType = 1;
-//                Toast.makeText(getApplicationContext(), "获取服务器参数成功", Toast.LENGTH_LONG).show();
-//                ifUploaded = false;
-//            }else if(msg.what == 1){
-//
-//                Response response = (Response)msg.obj;
-//                if(response != null){
-//                    Log.e("input","result String " + response);
-//                    if(response.getResultCode() == 0){
-//                        Toast.makeText(getApplicationContext(), response.getResultString(), Toast.LENGTH_LONG).show();
-//                        ifUploaded = true;
-//                    }else if(response.getResultCode() == 1){
-//                        Toast.makeText(getApplicationContext(), response.getResultString(), Toast.LENGTH_LONG).show();
-//                    }else if(response.getResultCode() == 2){
-//                        Toast.makeText(getApplicationContext(), response.getResultString(), Toast.LENGTH_LONG).show();
-//                    } else{
-//                        Toast.makeText(getApplicationContext(), "上传服务器失败，未知错误", Toast.LENGTH_LONG).show();
-//                    }
-//                } else
-//                    Toast.makeText(getApplicationContext(), "网络请求失败", Toast.LENGTH_LONG).show();
-//            }else if(msg.what == 2){
-//
-//            } else if(msg.what == -1){
-//                Exception e = (Exception)msg.obj;
-//                Toast.makeText(getApplicationContext(),e.getMessage() , Toast.LENGTH_LONG).show();
-//            }
-//
-//        }
-//    };
-
-
+    /*
+     * onclickListener 是用于处理按钮事件
+     */
     View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             switch(v.getId()){
-                case R.id.OKButton:
+                case R.id.OKButton://确认按钮事件
                     setAndUploadParam();
                     break;
 
-                case R.id.CancelButton:
+                case R.id.CancelButton://重置按钮事件
                     new AlertDialog.Builder(Param.this).setTitle("确认重置吗")
                             .setIcon(android.R.drawable.ic_dialog_info)
                             .setPositiveButton("确定", new DialogInterface.OnClickListener() {
@@ -175,26 +147,28 @@ public class Param extends ActionBarActivity {
 
                     break;
 
-                case R.id.ALLRandomButton:
+                case R.id.ALLRandomButton://随机按钮事件
                     getRandomInfo();
                     break;
 
-                case R.id.ServerGetButton:
+                case R.id.ServerGetButton://获取服务器参数按钮事件
                     getServerParam();
                     break;
 
-
-                case R.id.restoreButton:
+                case R.id.restoreButton://恢复指定参数按钮事件
                     getRestoreParam();
                     break;
             }
         }
     };
-
+    /*
+     *初始化UI组件
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_param);
+
 
         showTextView = (TextView)findViewById(R.id.ShowTextView);
         dateEditText = (EditText)findViewById(R.id.dateEditText);
@@ -212,13 +186,14 @@ public class Param extends ActionBarActivity {
         ServerGetButton.setOnClickListener(onClickListener);
         RestoreButton.setOnClickListener(onClickListener);
 
-        initParam();
+        initParam();//初始化参数
     }
+
+    //设置参数并且将参数上传服务器
     private void setAndUploadParam(){
         new AlertDialog.Builder(Param.this).setTitle("确认修改吗？")
                 .setIcon(android.R.drawable.ic_dialog_info)
                 .setPositiveButton("确认", new DialogInterface.OnClickListener() {
-
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         saveAllParam();
@@ -232,17 +207,23 @@ public class Param extends ActionBarActivity {
                 }).show();
     }
 
-
+    /*
+     *获取随机信息
+     * 因为IMSI不需要修改，所以只是获取本机的IMSI值
+     */
     private void getRandomInfo(){
         TelephonyManager tm = (TelephonyManager) getSystemService(this.TELEPHONY_SERVICE);
         IMSI = tm.getSubscriberId();
         Parameter parameter = RandomUtil.getRandomParameter();
         parameter.setIMSI(IMSI);
+        curParamStatus = RandomParam;
         showParameter(parameter);
-        uploadType = 0;
-        ifUploaded = false;
-    }
 
+    }
+    /*
+     *根据IMSI值从服务器获取指定的IMSI的参数
+     *
+     */
     private void getServerParam(){
         new AlertDialog.Builder(Param.this).setTitle("确认从服务获取参数吗？")
                 .setIcon(android.R.drawable.ic_dialog_info)
@@ -250,7 +231,7 @@ public class Param extends ActionBarActivity {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        RequestThread requestThread = new RequestThread(GetParamAction);
+                        RequestThread requestThread = new RequestThread(GetParamAction,IMSI);
                         requestThread.start();
                     }
                 }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -259,7 +240,10 @@ public class Param extends ActionBarActivity {
             }
         }).show();
     }
-
+    /*
+    *
+   *获取指定条件的所有的恢复结果
+   */
     private void getRestoreParam(){
         new AlertDialog.Builder(Param.this).setTitle("确认从服务获取参数吗？")
                 .setIcon(android.R.drawable.ic_dialog_info)
@@ -267,9 +251,9 @@ public class Param extends ActionBarActivity {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        DATE = dateEditText.getText().toString().trim();
-                        TASKNAME = taskNameEditText.getText().toString().trim();
-                        RequestThread requestThread = new RequestThread(IMSI,DATE,TASKNAME);
+                        DATE = dateEditText.getText().toString().trim();//获取设置的日期值
+                        TASKNAME = taskNameEditText.getText().toString().trim();//获取设置的任务名
+                        RequestThread requestThread = new RequestThread(GetRestoreParamAction,IMSI, DATE, TASKNAME);
                         requestThread.start();
 
                     }
@@ -278,15 +262,11 @@ public class Param extends ActionBarActivity {
             public void onClick(DialogInterface dialog, int which) {
             }
         }).show();
-
-        new AlertDialog.Builder(Param.this).setTitle("选择区域").setItems(areas, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(Param.this, "您已经选择了: " + which + ":" + areas[which], Toast.LENGTH_LONG).show();
-                dialog.dismiss();
-            }
-        }).show();
     }
 
+    /*
+     *恢复参数为上次设置成功的参数值
+     */
     private void initParam(){
         IMEI = ConfigUtil.get("IMEI");
         MAC = ConfigUtil.get("MAC");
@@ -301,7 +281,13 @@ public class Param extends ActionBarActivity {
         TASKNAME = ConfigUtil.get("TASKNAME");
         showParameter();
     }
+
+    /*
+     * 保存参数值，使当前的参数值生效
+     */
     private boolean saveAllParam(){
+        TASKNAME = taskNameEditText.getText().toString();
+
         Parameter parameter = new Parameter(IMEI,MAC,IMSI,MANU,MODEL,VERSION,PHONE,ID,GPS,IP,TASKNAME);
         boolean result = ConfigUtil.addParams(parameter);
         result &= XMLUtil.addParameter(parameter);
@@ -309,15 +295,23 @@ public class Param extends ActionBarActivity {
             RequestThread requestThread = new RequestThread(ConfirmParamAction,parameter);
             requestThread.start();
         }else if(curParamStatus.equals(RandomParam) ) {
+            if(parameter.getTASKNAME().equals("")){
+                Toast.makeText(getApplicationContext(), "taskname 不能为空", Toast.LENGTH_LONG).show();
+                return false;
+            }
             RequestThread requestThread = new RequestThread(UploadRandomParamAction,parameter);
             requestThread.start();
         }else if(curParamStatus.equals(ResotreParam) ) {
-            RequestThread requestThread = new RequestThread(ConfirmRestoreParamAction,ID);
+            RequestThread requestThread = new RequestThread(ConfirmRestoreParamAction,curselect);
             requestThread.start();
         }
         return result;
     }
 
+    /*
+     * parameter 参数信息
+     * 将parameter中的参数信息显示在UI上
+     */
     public void showParameter(Parameter parameter){
         IMEI = parameter.getIMEI();
         MAC = parameter.getMAC();
@@ -332,7 +326,33 @@ public class Param extends ActionBarActivity {
         TASKNAME = parameter.getTASKNAME();
         showParameter();
     }
+    /*
+     * 将获取的restoreresponse的值显示给用户选择，并将选择的值显示在UI上
+     *
+     */
+    public void showRestoreParameter(final RestoreResponse restoreResponse){
+        int size = restoreResponse.getParameterList().size();
+        final String[] parameters = new String[size];
 
+        for(int i = 0; i < size;i++){
+            Parameter parameter = restoreResponse.getParameterList().get(i);
+            parameters[i] = "IMEI:" + parameter.getIMEI()+"MAC:" + parameter.getMAC();
+
+        }
+        new AlertDialog.Builder(Param.this).setTitle("选择区域").setItems(parameters, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(Param.this, "您已经选择了: " + which + ":" + parameters[which], Toast.LENGTH_LONG).show();
+                curselect = which;//设置当前选择的恢复的结果的ID
+                curParamStatus = ResotreParam;//设置当前的参数类型为恢复结果类型
+                showParameter(restoreResponse.getParameterList().get(which));
+                dialog.dismiss();
+            }
+        }).show();
+    }
+
+    /*
+     *将从服务器获取的参数的返回结果在UI上显示
+     */
     public void showParameter(Response response){
         IMEI = response.getIMEI();
         MAC = response.getMAC();
@@ -348,6 +368,9 @@ public class Param extends ActionBarActivity {
         showParameter();
     }
 
+    /*
+     * 显示参数信息
+     */
     public void showParameter(){
         if(!TASKNAME.equals(""))
             taskNameEditText.setText(TASKNAME);
@@ -365,25 +388,33 @@ public class Param extends ActionBarActivity {
         showTextView.setText(info);
     }
 
+    /*
+     * 网络请求的线程因为Android不允许在主线程中进行网络请求，故需要生成一个线程进行网络请求，
+     * 获取请求结果成功后，交给handler去处理
+     * 当按钮事件触发时，调用对应的构造函数，
+     * 线程执行时通过判断requestaction来决定执行什么网络请求
+     */
     class RequestThread extends Thread{
-        int requestAction;//0 代表从服务器获取参数  1 代表将当前设置参数上传给服务器  2 代表获取以前的参数
+        int requestAction;
         Parameter uploadParameter;
-        String restoreID;
+        int restoreID;
         String IMSI;
         String date;
         String taskname;
-        public RequestThread(int requestAction){
+        public RequestThread(int requestAction,String IMSI){//获取服务器参数
+            this.IMSI = IMSI;
             this.requestAction = requestAction;
         }
-        public RequestThread(int requestAction,String restoreID){
+        public RequestThread(int requestAction,int restoreID){//确认恢复参数
             this.requestAction = requestAction;
             this.restoreID = restoreID;
         }
-        public RequestThread(int requestAction, Parameter uploadParameter){
+        public RequestThread(int requestAction, Parameter uploadParameter){//确认服务器参数或上传随机参数
             this.requestAction = requestAction;
             this.uploadParameter = uploadParameter;
         }
-        public RequestThread(String IMSI,String date,String taskname){
+        public RequestThread(int requestAction,String IMSI,String date,String taskname){//获取指定条件的恢复结果
+            this.requestAction = requestAction;
             this.IMSI = IMSI;
             this.date = date;
             this.taskname = taskname;
@@ -395,19 +426,19 @@ public class Param extends ActionBarActivity {
                 Message msg = new Message();
                 msg.what = requestAction;
                 switch (requestAction){
-                    case GetParamAction:
+                    case GetParamAction://获取服务器参数
                         msg.obj =ConfigUtil.getServerParam(IMSI);
                         break;
-                    case ConfirmParamAction:
+                    case ConfirmParamAction://确认服务器参数
                         msg.obj =  ConfigUtil.confirmParam(uploadParameter);
                         break;
-                    case UploadRandomParamAction:
+                    case UploadRandomParamAction://上传随机参数
                         msg.obj =  ConfigUtil.uploadRandomParam(uploadParameter);
                         break;
-                    case GetRestoreParamAction:
-                        msg.obj =   ConfigUtil.getRestoreResponse(IMSI,date, taskname);
+                    case GetRestoreParamAction://获取恢复参数
+                        msg.obj =   ConfigUtil.getRestoreParam(IMSI,date, taskname);
                         break;
-                    case ConfirmRestoreParamAction:
+                    case ConfirmRestoreParamAction://确认恢复参数
                         msg.obj =  ConfigUtil.confirmRestoreParam(restoreID);
                         break;
                     default:

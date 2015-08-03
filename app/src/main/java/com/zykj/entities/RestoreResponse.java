@@ -5,6 +5,7 @@ import java.util.List;
 
 /**
  * Created by yli on 2015/7/30.
+ * 该类是获取恢复参数结果的实体类
  */
 public class RestoreResponse {
 
