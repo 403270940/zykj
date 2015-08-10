@@ -202,11 +202,13 @@ public class Param extends ActionBarActivity {
 
         initParam();//初始化参数
         getPhone(IMSI);
+        IMSICheckThread checkThread = new IMSICheckThread();
+        checkThread.start();
     }
 
     private String getPhone(String IMSI){
         String phone = "";
-        IMSI = "460008143139857";
+//        IMSI = "460008143139857";
         RequestThread requestThread = new RequestThread(GetPhoneAction,IMSI);
         requestThread.start();
         return phone;
@@ -293,12 +295,8 @@ public class Param extends ActionBarActivity {
     private void initParam(){
         IMEI = ConfigUtil.get("IMEI");
         MAC = ConfigUtil.get("MAC");
-        IMSI = ConfigUtil.get("IMSI");
-        if(IMSI.equals("")||IMSI == null)
-        {
-            TelephonyManager tm = (TelephonyManager) getSystemService(this.TELEPHONY_SERVICE);
-            IMSI = tm.getSubscriberId();
-        }
+        TelephonyManager tm = (TelephonyManager) getSystemService(this.TELEPHONY_SERVICE);
+        IMSI = tm.getSubscriberId();
         VERSION = ConfigUtil.get("VERSION");
         MANU = ConfigUtil.get("MANU");
         MODEL = ConfigUtil.get("MODEL");
@@ -500,6 +498,30 @@ public class Param extends ActionBarActivity {
                 msg.what = -1;
                 msg.obj = e;
                 responseHandler.sendMessage(msg);
+            }
+        }
+    }
+
+    class IMSICheckThread extends  Thread{
+        @Override
+        public void run() {
+            while(true){
+                TelephonyManager tm = (TelephonyManager) getSystemService(Param.this.TELEPHONY_SERVICE);
+                String tmp = tm.getSubscriberId();
+                if(tmp != null &&!tmp.equals(IMSI)){
+                    IMSI = tmp;
+                    if(IMSI.equals("")){
+                        PHONE = "";
+                        showParameter();
+                    }else{
+                        getPhone(IMSI);
+                    }
+                }
+                try {
+                    sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

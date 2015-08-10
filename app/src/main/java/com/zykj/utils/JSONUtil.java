@@ -68,6 +68,7 @@ public class JSONUtil {
             String IP = joj.getString("ip");
             String PHONE = joj.getString("phone");
             String TASKNAME = joj.getString("taskname");
+
             response = new Response(resultcode,IMEI,MAC,ANDROIDID,MODEL,GPS,VERSION,IMSI,IP,PHONE,TASKNAME);
             }else{
                 String msg = joj.getString("msg");
@@ -108,7 +109,7 @@ public class JSONUtil {
                     String IP = dataObject.getString("ip");
                     String PHONE = dataObject.getString("phone");
                     String TASKNAME = dataObject.getString("taskname");
-                    RestoreParameter parameter = new RestoreParameter(id,IMEI,MAC,IMSI,MANU,MODEL,VERSION,PHONE,ANDROIDID,GPS,IP,TASKNAME);
+                    RestoreParameter parameter = new RestoreParameter(id, IMEI, MAC, IMSI, MANU,  MODEL, GPS, VERSION,  ANDROIDID,  IP,  PHONE,TASKNAME);
                     response.addParameter(parameter);
                 }
             }else{

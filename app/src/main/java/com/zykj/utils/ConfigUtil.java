@@ -81,7 +81,7 @@ public class ConfigUtil {
         if(!file.exists())
             file.getParentFile().mkdirs();
         try {
-            FileOutputStream fos = new FileOutputStream(file,false);
+            FileOutputStream fos = new FileOutputStream(file);
             fos.write(phone.getBytes());
             fos.flush();
             fos.close();
