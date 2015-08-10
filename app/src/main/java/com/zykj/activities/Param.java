@@ -16,7 +16,9 @@ import android.widget.Toast;
 
 import com.liyongyue.zykj.R;
 import com.zykj.entities.Parameter;
+import com.zykj.entities.PhoneResponse;
 import com.zykj.entities.Response;
+import com.zykj.entities.RestoreParameter;
 import com.zykj.entities.RestoreResponse;
 import com.zykj.utils.ConfigUtil;
 import com.zykj.utils.RandomUtil;
@@ -36,7 +38,7 @@ public class Param extends ActionBarActivity {
     public final int UploadRandomParamAction = 2;//上传随机参数
     public final int GetRestoreParamAction = 3;//恢复指定参数
     public final int ConfirmRestoreParamAction = 4;//确认恢复参数
-
+    public final int GetPhoneAction = 5;
     public String IMEI = "";
     public String MAC = "";
     public String IMSI = "";
@@ -51,7 +53,7 @@ public class Param extends ActionBarActivity {
     public String DATE = "";
     public String curParamStatus = InitialParam;//用于记录当前显示的参数是何种参数
 
-    private static int curselect = 0;//当前选择的恢复参数的ID,如恢复参数 时返回3个参数，用户选择了第2个，则保存为1
+    private static int curID = 0;//当前选择的恢复参数的ID,如恢复参数 时返回3个参数，用户选择了第2个，则保存为1
 
     private TextView showTextView  = null;//显示参数TextView
     private EditText dateEditText = null;//日期编辑控件
@@ -106,6 +108,17 @@ public class Param extends ActionBarActivity {
                     Response confirmRestoreResponse = (Response)msg.obj;
                     Toast.makeText(getApplicationContext(), confirmRestoreResponse.getMSG(), Toast.LENGTH_LONG).show();
                     break;
+                case GetPhoneAction:
+                    PhoneResponse phoneResponse = (PhoneResponse)msg.obj;
+                    if(phoneResponse.getCode() == 0){
+                        PHONE = phoneResponse.getPhone();
+                        ConfigUtil.savePhone(PHONE);
+                        showParameter();
+                    }else{
+                        PHONE = "13888888888";
+                        Toast.makeText(getApplicationContext(), phoneResponse.getMsg(), Toast.LENGTH_LONG).show();
+                    }
+                    break;
                 case ExceptionAction:
                     Exception e = (Exception)msg.obj;
                     Toast.makeText(getApplicationContext(), e.getMessage().toString(), Toast.LENGTH_LONG).show();
@@ -139,7 +152,6 @@ public class Param extends ActionBarActivity {
                                 }
                             })
                             .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                 }
@@ -161,6 +173,8 @@ public class Param extends ActionBarActivity {
             }
         }
     };
+
+
     /*
      *初始化UI组件
      */
@@ -187,8 +201,16 @@ public class Param extends ActionBarActivity {
         RestoreButton.setOnClickListener(onClickListener);
 
         initParam();//初始化参数
+        getPhone(IMSI);
     }
 
+    private String getPhone(String IMSI){
+        String phone = "";
+        IMSI = "460008143139857";
+        RequestThread requestThread = new RequestThread(GetPhoneAction,IMSI);
+        requestThread.start();
+        return phone;
+    }
     //设置参数并且将参数上传服务器
     private void setAndUploadParam(){
         new AlertDialog.Builder(Param.this).setTitle("确认修改吗？")
@@ -216,6 +238,7 @@ public class Param extends ActionBarActivity {
         IMSI = tm.getSubscriberId();
         Parameter parameter = RandomUtil.getRandomParameter();
         parameter.setIMSI(IMSI);
+        parameter.setPHONE(PHONE);
         curParamStatus = RandomParam;
         showParameter(parameter);
 
@@ -271,6 +294,11 @@ public class Param extends ActionBarActivity {
         IMEI = ConfigUtil.get("IMEI");
         MAC = ConfigUtil.get("MAC");
         IMSI = ConfigUtil.get("IMSI");
+        if(IMSI.equals("")||IMSI == null)
+        {
+            TelephonyManager tm = (TelephonyManager) getSystemService(this.TELEPHONY_SERVICE);
+            IMSI = tm.getSubscriberId();
+        }
         VERSION = ConfigUtil.get("VERSION");
         MANU = ConfigUtil.get("MANU");
         MODEL = ConfigUtil.get("MODEL");
@@ -302,7 +330,7 @@ public class Param extends ActionBarActivity {
             RequestThread requestThread = new RequestThread(UploadRandomParamAction,parameter);
             requestThread.start();
         }else if(curParamStatus.equals(ResotreParam) ) {
-            RequestThread requestThread = new RequestThread(ConfirmRestoreParamAction,curselect);
+            RequestThread requestThread = new RequestThread(ConfirmRestoreParamAction,curID);
             requestThread.start();
         }
         return result;
@@ -326,6 +354,22 @@ public class Param extends ActionBarActivity {
         TASKNAME = parameter.getTASKNAME();
         showParameter();
     }
+
+    public void showParameter(RestoreParameter parameter){
+        IMEI = parameter.getIMEI();
+        MAC = parameter.getMAC();
+        IMSI = parameter.getIMSI();
+        VERSION = parameter.getVERSION();
+        MANU = parameter.getMANU();
+        MODEL = parameter.getMODEL();
+        ID = parameter.getANDROIDID();
+        GPS = parameter.getGPS();
+        IP = parameter.getIP();
+        PHONE = parameter.getPHONE();
+        TASKNAME = parameter.getTASKNAME();
+        showParameter();
+    }
+
     /*
      * 将获取的restoreresponse的值显示给用户选择，并将选择的值显示在UI上
      *
@@ -335,14 +379,14 @@ public class Param extends ActionBarActivity {
         final String[] parameters = new String[size];
 
         for(int i = 0; i < size;i++){
-            Parameter parameter = restoreResponse.getParameterList().get(i);
-            parameters[i] = "IMEI:" + parameter.getIMEI()+"MAC:" + parameter.getMAC();
+            RestoreParameter parameter = restoreResponse.getParameterList().get(i);
+            parameters[i] = " ID:" + parameter.getId() +"IMEI:" + parameter.getIMEI()+" MAC:" + parameter.getMAC() ;
 
         }
-        new AlertDialog.Builder(Param.this).setTitle("选择区域").setItems(parameters, new DialogInterface.OnClickListener() {
+        new AlertDialog.Builder(Param.this).setTitle("选择要还原参数").setItems(parameters, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 Toast.makeText(Param.this, "您已经选择了: " + which + ":" + parameters[which], Toast.LENGTH_LONG).show();
-                curselect = which;//设置当前选择的恢复的结果的ID
+                curID = restoreResponse.getParameterList().get(which).getId();//设置当前选择的恢复的结果的ID
                 curParamStatus = ResotreParam;//设置当前的参数类型为恢复结果类型
                 showParameter(restoreResponse.getParameterList().get(which));
                 dialog.dismiss();
@@ -358,8 +402,12 @@ public class Param extends ActionBarActivity {
         MAC = response.getMAC();
         IMSI = response.getIMSI();
         VERSION = response.getVERSION();
-        MANU = response.getMODEL().split(" ")[0];
-        MODEL = response.getMODEL().split(" ")[1];
+        if(response.getMODEL().split(" ").length<2){
+            MODEL = response.getMODEL();
+        }else {
+            MANU = response.getMODEL().split(" ")[0];
+            MODEL = response.getMODEL().split(" ")[1];
+        }
         ID = response.getANDROIDID();
         GPS = response.getGPS();
         IP = response.getIP();
@@ -441,6 +489,8 @@ public class Param extends ActionBarActivity {
                     case ConfirmRestoreParamAction://确认恢复参数
                         msg.obj =  ConfigUtil.confirmRestoreParam(restoreID);
                         break;
+                    case GetPhoneAction:
+                        msg.obj = ConfigUtil.getPhone(IMSI);
                     default:
                         break;
                 }

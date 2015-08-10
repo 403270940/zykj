@@ -136,4 +136,26 @@ public class HttpUtil {
         return result;
     }
 
+
+    public static String getPhone(String IMSI) throws  Exception{
+        String result = null;
+        String updateurl = GlobalValue.getPhone;
+        updateurl +=  "&imsi="+IMSI;
+
+        Log.e("input","getPhone url:" + updateurl);
+        HttpGet get = new HttpGet(updateurl);
+        try {
+            HttpResponse response = httpClient.execute(get);
+            HttpEntity entity = response.getEntity();
+            result = EntityUtils.toString(entity);
+            Log.e("input","get end:"+result);
+        } catch (Exception e) {
+            Log.e("input","",e);
+            result = null;
+            throw new Exception("联网失败");
+        }
+        return result;
+    }
+
+
 }

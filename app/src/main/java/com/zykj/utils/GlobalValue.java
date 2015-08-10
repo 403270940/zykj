@@ -16,4 +16,5 @@ public class GlobalValue {
     public static String randomURL = "http://115.236.65.83:8080/topup/mobileParameterServlet?method=randomMobileParam";
     public static String restoreParamURL ="http://115.236.65.83:8080/topup/mobileParameterServlet?method=requestRestoreParam";
     public static String confirmRestoreParamURL = "http://115.236.65.83:8080/topup/mobileParameterServlet?method=confirmRestoreParam";
+    public static String getPhone = "http://115.236.65.83:8080/topup/mobileParameterServlet?method=requestGetPhone";
 }

@@ -5,6 +5,7 @@ import android.os.Environment;
 import android.util.Log;
 
 import com.zykj.entities.Parameter;
+import com.zykj.entities.PhoneResponse;
 import com.zykj.entities.Response;
 import com.zykj.entities.RestoreResponse;
 
@@ -29,7 +30,9 @@ import java.util.Properties;
  */
 public class ConfigUtil {
 
-    private static final String propertyFileName = Environment.getExternalStorageDirectory() + "/shua/config.properties";
+
+    private static  String propertyFileName;
+    private static String phoneFile;
     private static Properties properties = null;
     private static HashMap<String,String> modelMap = null;
     private static ArrayList<String> modelList = null;
@@ -43,6 +46,8 @@ public class ConfigUtil {
 
     static{
         try {
+            propertyFileName = Environment.getExternalStorageDirectory() + "/shua/config.properties";
+            phoneFile = Environment.getExternalStorageDirectory() + "/shua/phone.ini";
             modelList = new ArrayList<String>();
             loadMobile();
             initProperties();
@@ -71,7 +76,20 @@ public class ConfigUtil {
         return false;
     }
 
-
+    public static boolean savePhone(String phone){
+        File file = new File(phoneFile);
+        if(!file.exists())
+            file.getParentFile().mkdirs();
+        try {
+            FileOutputStream fos = new FileOutputStream(file,false);
+            fos.write(phone.getBytes());
+            fos.flush();
+            fos.close();
+        } catch (Exception e) {
+            Log.e("input","",e);
+        }
+        return true;
+    }
 //    public static void bianliProperties(Properties properties){
 
 //
@@ -85,7 +103,11 @@ public class ConfigUtil {
 
     private static boolean loadMobile(){
         String modelFileName = "/assets/models.xml";
+
         InputStream in = ConfigUtil.class.getResourceAsStream(modelFileName);
+        if(in == null){
+            Log.e("input", "models can not be found");
+        }
         try {
             Document doc = Jsoup.parse(in, "UTF-8","", Parser.xmlParser());
             Elements elements = doc.select("model");
@@ -112,11 +134,7 @@ public class ConfigUtil {
         }
 
     }
-    public static RestoreResponse getRestoreResponse(String IMSI,String date,String taskname) throws  Exception{
-        RestoreResponse restoreResponse  = null;
 
-        return restoreResponse;
-    }
 
 //    public static Parameter getServerInfo(String IMSI) throws  Exception{
 //        //if get false return false
@@ -156,7 +174,7 @@ public class ConfigUtil {
     }
     public static Response confirmParam(Parameter parameter) throws Exception{
         Response response = null;
-        String result = HttpUtil.confirmModiParam(parameter.getIMSI(),parameter.getPHONE());
+        String result = HttpUtil.confirmModiParam(parameter.getIMSI(), parameter.getPHONE());
         response = JSONUtil.getResponseFromJSON(result);
         return response;
     }
@@ -179,6 +197,12 @@ public class ConfigUtil {
         Response response = null;
         String result = HttpUtil.confirmRestoreParam(ID);
         response = JSONUtil.getResponseFromJSON(result);
+        return response;
+    }
+    public static PhoneResponse getPhone(String IMSI) throws Exception{
+        PhoneResponse response = null;
+        String result = HttpUtil.getPhone(IMSI);
+        response = JSONUtil.getPhoneResponseFromJSON(result);
         return response;
     }
 //    public static Response updateServerInfo(Parameter parameter,int type) throws  Exception{
@@ -207,7 +231,7 @@ public class ConfigUtil {
 
 
     public static String get(String key){
-        Log.e("input get","key:"+key);
+
         String result = "";
         try {
             if(properties==null||properties.isEmpty()){
@@ -223,7 +247,7 @@ public class ConfigUtil {
         }catch (Exception e){
             Log.e("input e", "error",e);
         }
-
+        Log.e("input get","key:"+key + "result :" + result);
         return result;
     }
 

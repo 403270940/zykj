@@ -76,7 +76,7 @@ public class WZUtil implements IXposedHookLoadPackage{
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam loadPackageParam) throws Throwable {
         mLpp = loadPackageParam;
-//        if(!loadPackageParam.equals("com.liyongyue.getinfo"))return;
+//       if(!loadPackageParam.equals("com.liyongyue.getinfo"))return;
         try{
             Class<?> classBuild = XposedHelpers.findClass("android.os.Build", loadPackageParam.classLoader);
             String saveModel        = ConfigUtil.get("MODEL");

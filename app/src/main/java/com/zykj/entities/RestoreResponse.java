@@ -11,7 +11,7 @@ public class RestoreResponse {
 
     private int code;
     private String msg;
-    private List<Parameter> parameterList = new ArrayList<Parameter>();
+    private List<RestoreParameter> parameterList = new ArrayList<RestoreParameter>();
 
     public int getCode() {
         return code;
@@ -29,15 +29,15 @@ public class RestoreResponse {
         this.msg = msg;
     }
 
-    public void addParameter(Parameter parameter){
+    public void addParameter(RestoreParameter parameter){
         parameterList.add(parameter);
     }
 
-    public List<Parameter> getParameterList() {
+    public List<RestoreParameter> getParameterList() {
         return parameterList;
     }
 
-    public void setParameterList(List<Parameter> parameterList) {
+    public void setParameterList(List<RestoreParameter> parameterList) {
         this.parameterList = parameterList;
     }
 }

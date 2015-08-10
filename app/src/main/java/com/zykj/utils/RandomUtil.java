@@ -93,7 +93,7 @@ public class RandomUtil {
         }
         MODEL = MODEL.trim();
         String VERSION = getRandomVersion();
-        String PHONE = "15825413423";
+        String PHONE = "13888888888";
         String ANDROIDID = getRandomID();
         String GPS = getRandomGPS();
         String IP = "1.1.1.1";
