@@ -2,12 +2,13 @@ package com.zykj.activities;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.ActionBarActivity;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,6 +25,11 @@ import com.zykj.utils.ConfigUtil;
 import com.zykj.utils.RandomUtil;
 import com.zykj.utils.XMLUtil;
 
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.util.Enumeration;
+
 
 public class Param extends ActionBarActivity {
     public String InitialParam = "InitialParam";//初始化参数
@@ -31,7 +37,7 @@ public class Param extends ActionBarActivity {
     public String RandomParam = "RandomParam";//随机参数
     public String ServerParam = "ServerParam";//服务器获取参数
     public String ResotreParam = "ResotreParam";//恢复的参数
-
+    private boolean IMSIThreadGoOn = true;
     public final int ExceptionAction = -1;
     public final int GetParamAction = 0;//获取服务器参数
     public final int ConfirmParamAction = 1;//确认服务器参数
@@ -52,7 +58,7 @@ public class Param extends ActionBarActivity {
     public String TASKNAME = "";
     public String DATE = "";
     public String curParamStatus = InitialParam;//用于记录当前显示的参数是何种参数
-
+    private boolean ISGetPhoneSuccess = false;
     private static int curID = 0;//当前选择的恢复参数的ID,如恢复参数 时返回3个参数，用户选择了第2个，则保存为1
 
     private TextView showTextView  = null;//显示参数TextView
@@ -112,16 +118,16 @@ public class Param extends ActionBarActivity {
                     PhoneResponse phoneResponse = (PhoneResponse)msg.obj;
                     if(phoneResponse.getCode() == 0){
                         PHONE = phoneResponse.getPhone();
+                        ISGetPhoneSuccess = true;
                         ConfigUtil.savePhone(PHONE);
                         showParameter();
                     }else{
-                        PHONE = "13888888888";
                         Toast.makeText(getApplicationContext(), phoneResponse.getMsg(), Toast.LENGTH_LONG).show();
                     }
                     break;
                 case ExceptionAction:
                     Exception e = (Exception)msg.obj;
-                    Toast.makeText(getApplicationContext(), e.getMessage().toString(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), e.getMessage().toString(), Toast.LENGTH_SHORT).show();
                     break;
                 default:
                     Toast.makeText(getApplicationContext(), "未知错误", Toast.LENGTH_LONG).show();
@@ -201,8 +207,7 @@ public class Param extends ActionBarActivity {
         RestoreButton.setOnClickListener(onClickListener);
 
         initParam();//初始化参数
-        getPhone(IMSI);
-        IMSICheckThread checkThread = new IMSICheckThread();
+        IMSICheckThread checkThread = new IMSICheckThread();//检测sim卡变动线程
         checkThread.start();
     }
 
@@ -302,7 +307,8 @@ public class Param extends ActionBarActivity {
         MODEL = ConfigUtil.get("MODEL");
         ID = ConfigUtil.get("ANDROIDID");
         GPS = ConfigUtil.get("GPS");
-        IP = ConfigUtil.get("IP");
+//        IP = ConfigUtil.get("IP");
+        IP = getIp();
         PHONE = ConfigUtil.get("PHONE");
         TASKNAME = ConfigUtil.get("TASKNAME");
         showParameter();
@@ -334,6 +340,54 @@ public class Param extends ActionBarActivity {
         return result;
     }
 
+    private  String getLocalIpAddress() {
+        WifiManager wifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
+        WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+        // 获取32位整型IP地址
+        int ipAddress = wifiInfo.getIpAddress();
+
+        //返回整型地址转换成“*.*.*.*”地址
+        return String.format("%d.%d.%d.%d",
+                (ipAddress & 0xff), (ipAddress >> 8 & 0xff),
+                (ipAddress >> 16 & 0xff), (ipAddress >> 24 & 0xff));
+    }
+
+    private static String getIpAddress() {
+        try {
+            for (Enumeration<NetworkInterface> en = NetworkInterface
+                    .getNetworkInterfaces(); en.hasMoreElements();) {
+                NetworkInterface intf = en.nextElement();
+                for (Enumeration<InetAddress> enumIpAddr = intf
+                        .getInetAddresses(); enumIpAddr.hasMoreElements();) {
+                    InetAddress inetAddress = enumIpAddr.nextElement();
+                    if (!inetAddress.isLoopbackAddress()
+                            && inetAddress instanceof Inet4Address) {
+                        // if (!inetAddress.isLoopbackAddress() && inetAddress
+                        // instanceof Inet6Address) {
+                        return inetAddress.getHostAddress().toString();
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public  String getIp(){
+        String result = "";
+        String tmp = getLocalIpAddress();
+        if(tmp !=null && !tmp.equals("0.0.0.0")){
+            result = tmp;
+            return result;
+        }
+        tmp = getIpAddress();
+        if(tmp !=null && !tmp.equals("")){
+            result = tmp;
+            return result;
+        }
+        return "";
+    }
     /*
      * parameter 参数信息
      * 将parameter中的参数信息显示在UI上
@@ -352,7 +406,10 @@ public class Param extends ActionBarActivity {
         TASKNAME = parameter.getTASKNAME();
         showParameter();
     }
-
+    /*
+     * parameter 参数信息
+     * 将parameter中的恢复参数信息显示在UI上
+     */
     public void showParameter(RestoreParameter parameter){
         IMEI = parameter.getIMEI();
         MAC = parameter.getMAC();
@@ -495,23 +552,30 @@ public class Param extends ActionBarActivity {
                 responseHandler.sendMessage(msg);
             }catch (Exception e){
                 Message msg = new Message();
-                msg.what = -1;
+                msg.what = ExceptionAction;
                 msg.obj = e;
                 responseHandler.sendMessage(msg);
             }
         }
     }
 
+    /*
+     *该类线程是用于检测sim卡变动情况，如果sim卡变动，则进行网络请求获取到新的手机号码
+     */
     class IMSICheckThread extends  Thread{
         @Override
         public void run() {
-            while(true){
+            while(IMSIThreadGoOn){
                 TelephonyManager tm = (TelephonyManager) getSystemService(Param.this.TELEPHONY_SERVICE);
-                String tmp = tm.getSubscriberId();
-                if(tmp != null &&!tmp.equals(IMSI)){
-                    IMSI = tmp;
+                String tmpIMSI = tm.getSubscriberId();
+                if(tmpIMSI == null){
+                    tmpIMSI = "";
+                }
+                if(!tmpIMSI.equals(IMSI) || ISGetPhoneSuccess == false){
+                    ISGetPhoneSuccess = false;
                     if(IMSI.equals("")){
                         PHONE = "";
+                        IMSI = tmpIMSI;
                         showParameter();
                     }else{
                         getPhone(IMSI);
@@ -526,4 +590,10 @@ public class Param extends ActionBarActivity {
         }
     }
 
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        IMSIThreadGoOn = false;
+    }
 }

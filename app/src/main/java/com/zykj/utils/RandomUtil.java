@@ -17,6 +17,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -178,9 +179,12 @@ public class RandomUtil {
     }
 
     public static String getRandomGPS(){
-        String result = "120.104776,30.290787";
-        String lat = "1" + getRandomString(GlobalValue.num,2) + "." + getRandomString(GlobalValue.num,6);
-        String lon = getRandomString(GlobalValue.num,2) + "." + getRandomString(GlobalValue.num, 6);
+        DecimalFormat dcmFmt = new DecimalFormat("0.000000");
+        Random random = new Random();
+        Double lon1 =  120 + random.nextDouble()*25;
+        Double lat1 =  20 + random.nextDouble()*22;
+        String lon = dcmFmt.format(lon1);
+        String lat = dcmFmt.format(lat1);
         return lat + "," + lon;
     }
 

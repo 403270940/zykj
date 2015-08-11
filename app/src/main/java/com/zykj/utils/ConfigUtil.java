@@ -1,9 +1,12 @@
 package com.zykj.utils;
 
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Environment;
 
 import android.util.Log;
 
+import com.zykj.activities.Param;
 import com.zykj.entities.Parameter;
 import com.zykj.entities.PhoneResponse;
 import com.zykj.entities.Response;
@@ -135,7 +138,6 @@ public class ConfigUtil {
 
     }
 
-
 //    public static Parameter getServerInfo(String IMSI) throws  Exception{
 //        //if get false return false
 //        //if format error return false
@@ -229,7 +231,6 @@ public class ConfigUtil {
 //
 //    }
 
-
     public static String get(String key){
 
         String result = "";
@@ -264,7 +265,6 @@ public class ConfigUtil {
         }
         return true;
     }
-
 
     public static boolean addParams(Parameter parameter){
         if(properties==null)

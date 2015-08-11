@@ -46,81 +46,87 @@ public class JSONUtil {
 
     public static Response getResponseFromJSON(String json)throws Exception{
         Response response = null;
-        try {
-
-            JSONObject joj = new JSONObject(json);
-//            Log.e("input","jsonObject:" + joj.toString());
-            int resultcode = joj.getInt("error");
-
-            if(resultcode==0){
-                if(json.contains("msg")){
-                    String msg = joj.getString("msg");
-                    response = new Response(resultcode,msg);
-                    return response;
-                }
-            String IMEI = joj.getString("imei");
-            String MAC = joj.getString("mac");
-            String ANDROIDID = joj.getString("androidid");
-            String MODEL = joj.getString("model");
-            String GPS = joj.getString("gps");
-            String VERSION = joj.getString("version");
-            String IMSI = joj.getString("imsi");
-            String IP = joj.getString("ip");
-            String PHONE = joj.getString("phone");
-            String TASKNAME = joj.getString("taskname");
-
-            response = new Response(resultcode,IMEI,MAC,ANDROIDID,MODEL,GPS,VERSION,IMSI,IP,PHONE,TASKNAME);
-            }else{
-                String msg = joj.getString("msg");
-                if(msg == null)return null;
+        JSONObject joj = new JSONObject(json);
+        int resultcode = getIntFromObject(joj, "error");
+        if(resultcode==0){
+            if(json.contains("msg")){
+                String msg = getStringFromObject(joj, "msg");
                 response = new Response(resultcode,msg);
+                return response;
             }
-        }catch (Exception e){
-            Log.e("input","",e);
-            throw  new Exception("网络请求返回格式错误，返回结果：" + json);
+            String IMEI = getStringFromObject(joj, "imei");
+            String MAC = getStringFromObject(joj, "mac");
+            String ANDROIDID = getStringFromObject(joj, "androidid");
+            String MODEL = getStringFromObject(joj, "model");
+            String GPS = getStringFromObject(joj, "gps");
+            String VERSION = getStringFromObject(joj, "version");
+            String IMSI = getStringFromObject(joj, "imsi");
+            String IP = getStringFromObject(joj, "ip");
+            String PHONE = getStringFromObject(joj, "phone");
+            String TASKNAME = getStringFromObject(joj, "taskname");
+            response = new Response(resultcode,IMEI,MAC,ANDROIDID,MODEL,GPS,VERSION,IMSI,IP,PHONE,TASKNAME);
+        }else{
+            String msg = getStringFromObject(joj,"msg");
+            if(msg == null)return null;
+            response = new Response(resultcode,msg);
         }
         return response;
+    }
+
+    private static int getIntFromObject(JSONObject obj,String key) throws  Exception{
+        int result = 0;
+        try {
+            result = obj.getInt(key);
+        } catch (JSONException e) {
+            throw new Exception("数据格式错误： key为：" + key);
+        }
+        return result;
+    }
+
+    private static String getStringFromObject(JSONObject obj,String key) throws  Exception{
+        String result = "";
+        try {
+            result = obj.getString(key);
+            if(key.equals("model")&&result.split(" ").length < 2){
+                throw new Exception("数据格式错误： key为：" + key + " result为:" + result);
+            }
+        } catch (JSONException e) {
+            throw new Exception("数据格式错误： key为：" + key);
+        }
+        return result;
     }
 
     public static RestoreResponse getRestoreResponseFromJSON(String json)throws Exception{
         RestoreResponse response = new RestoreResponse();
         List<Parameter> parameterList = new ArrayList<Parameter>();
-        try {
-            JSONObject joj = new JSONObject(json);
-            int code = joj.getInt("error");
-            response.setCode(code);
-            if(code == 0){
-                JSONArray dataArray = joj.getJSONArray("data");
-                for(int i = 0; i < dataArray.length();i++){
-                    JSONObject dataObject = (JSONObject)dataArray.get(i);
-                    int id = dataObject.getInt("id");
-                    String IMEI = dataObject.getString("imei");
-                    String MAC = dataObject.getString("mac");
-                    String ANDROIDID = dataObject.getString("androidid");
-                    String TMP = dataObject.getString("model");
-                    String MANU = TMP.split(" ")[0];
-                    String MODEL = "";
-                    if(TMP.split(" ").length >= 2){
-                        MODEL = TMP.split(" ")[1];
-                    }
-                    String GPS = dataObject.getString("gps");
-                    String VERSION = dataObject.getString("version");
-                    String IMSI = dataObject.getString("imsi");
-                    String IP = dataObject.getString("ip");
-                    String PHONE = dataObject.getString("phone");
-                    String TASKNAME = dataObject.getString("taskname");
-                    RestoreParameter parameter = new RestoreParameter(id, IMEI, MAC, IMSI, MANU,  MODEL, GPS, VERSION,  ANDROIDID,  IP,  PHONE,TASKNAME);
-                    response.addParameter(parameter);
-                }
-            }else{
-                String MSG = joj.getString("msg");
-                response.setMsg(MSG);
-            }
-            Log.e("input",joj.toString());
-        }catch (Exception e){
-            throw new Exception("返回结果格式不正确");
-        }
+        JSONObject joj = new JSONObject(json);
+        int code = getIntFromObject(joj,"error");
+        response.setCode(code);
+        if(code == 0){
+            JSONArray dataArray = joj.getJSONArray("data");
+            for(int i = 0; i < dataArray.length();i++){
+                JSONObject dataObject = (JSONObject)dataArray.get(i);
+                int id = getIntFromObject(dataObject, "id");
+                String IMEI = getStringFromObject(dataObject, "imei");
+                String MAC = getStringFromObject(dataObject, "mac");
+                String ANDROIDID = getStringFromObject(dataObject, "androidid");
+                String TMP = getStringFromObject(dataObject, "model");
+                String MANU = TMP.split(" ")[0];
+                String MODEL = MODEL = TMP.split(" ")[1];
 
+                String GPS = getStringFromObject(dataObject,"gps");
+                String VERSION = getStringFromObject(dataObject, "version");
+                String IMSI = getStringFromObject(dataObject, "imsi");
+                String IP = getStringFromObject(dataObject, "ip");
+                String PHONE = getStringFromObject(dataObject, "phone");
+                String TASKNAME = getStringFromObject(dataObject,"taskname");
+                RestoreParameter parameter = new RestoreParameter(id, IMEI, MAC, IMSI, MANU,  MODEL, GPS, VERSION,  ANDROIDID,  IP,  PHONE,TASKNAME);
+                response.addParameter(parameter);
+            }
+        }else{
+            String MSG = getStringFromObject(joj, "msg");
+            response.setMsg(MSG);
+        }
 
         return response;
     }
