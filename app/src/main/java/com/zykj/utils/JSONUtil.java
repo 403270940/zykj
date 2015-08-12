@@ -87,9 +87,6 @@ public class JSONUtil {
         String result = "";
         try {
             result = obj.getString(key);
-            if(key.equals("model")&&result.split(" ").length < 2){
-                throw new Exception("数据格式错误： key为：" + key + " result为:" + result);
-            }
         } catch (JSONException e) {
             throw new Exception("数据格式错误： key为：" + key);
         }
@@ -111,8 +108,8 @@ public class JSONUtil {
                 String MAC = getStringFromObject(dataObject, "mac");
                 String ANDROIDID = getStringFromObject(dataObject, "androidid");
                 String TMP = getStringFromObject(dataObject, "model");
-                String MANU = TMP.split(" ")[0];
-                String MODEL = MODEL = TMP.split(" ")[1];
+                String MANU = ConfigUtil.getManu(TMP);
+                String MODEL = MODEL = ConfigUtil.getModel(TMP);
 
                 String GPS = getStringFromObject(dataObject,"gps");
                 String VERSION = getStringFromObject(dataObject, "version");

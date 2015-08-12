@@ -122,7 +122,7 @@ public class ConfigUtil {
                     modelList.add(changshang + " " + xinghao);
                 }
             }
-            Log.e("input xml",doc.outerHtml());
+//            Log.e("input xml",doc.outerHtml());
         } catch (IOException e) {
             Log.e("input", "", e);
         }
@@ -133,40 +133,31 @@ public class ConfigUtil {
 
     public static void outModel(){
         for(String model : modelList){
-            Log.e("input","model:"+ model);
+//            Log.e("input","model:"+ model);
         }
 
     }
 
-//    public static Parameter getServerInfo(String IMSI) throws  Exception{
-//        //if get false return false
-//        //if format error return false
-//        Parameter parameter = null;
-//
-//        String result = HttpUtil.requestModiParam(IMSI);
-//        Log.e("input", "http result:" + result);
-//        if(result == null || result.equals("null")){
-//            throw new Exception("网络请求返回为空");
-//        }
-//        Response response = JSONUtil.getResponseFromJSON(result);
-//        if(response.getResultCode() != 0){
-//            return null;
-//        }else{
-//            String model = response.getMODEL();
-//            String []tmp = model.split(" ");
-//            int count = tmp.length;
-//            if(count < 2) throw  new Exception("model 格式错误");
-//
-//            String MANU = tmp[0].trim();
-//            String XH = "";
-//            for(int i = 1;i < count; i ++){
-//                XH = tmp[i].trim() + " ";
-//            }
-//            XH = XH.trim();
-//            parameter = new Parameter(response.getIMEI(),response.getMAC(),response.getIMSI(),MANU,XH,response.getVERSION(),response.getPHONE(),response.getANDROIDID(),response.getGPS(),response.getIP(),response.getTASKNAME());
-//        }
-//        return parameter;
-//    }
+
+    public static String getManu(String model){
+        String result = "";
+        String[] tmp = model.split(" ");
+        if(tmp.length <= 1)
+            return "";
+        result = tmp[0];
+        return result;
+    }
+
+    public static String getModel(String model){
+        String result = "";
+        String[] tmp = model.split(" ");
+        if(tmp.length <= 1)
+            return model;
+        for(int i = 1;i < tmp.length;i ++){
+            result += tmp[i];
+        }
+        return result;
+    }
 
     public static Response getServerParam(String IMSI) throws Exception{
         Response response = null;
@@ -189,6 +180,7 @@ public class ConfigUtil {
     }
 
     public static RestoreResponse getRestoreParam(String IMSI,String date,String taskname) throws Exception{
+        IMSI = "460021687748779";
         RestoreResponse restoreResponse = null;
         String result = HttpUtil.getRestoreParam(IMSI, date, taskname);
         restoreResponse = JSONUtil.getRestoreResponseFromJSON(result);
@@ -248,7 +240,7 @@ public class ConfigUtil {
         }catch (Exception e){
             Log.e("input e", "error",e);
         }
-        Log.e("input get","key:"+key + "result :" + result);
+//        Log.e("input get","key:"+key + "result :" + result);
         return result;
     }
 
@@ -261,7 +253,6 @@ public class ConfigUtil {
             properties.store(fos, "");
         } catch (Exception e) {
             Log.e("input","",e);
-            Log.e("input", "", e);
         }
         return true;
     }

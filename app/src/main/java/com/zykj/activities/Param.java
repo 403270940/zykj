@@ -32,32 +32,33 @@ import java.util.Enumeration;
 
 
 public class Param extends ActionBarActivity {
-    public String InitialParam = "InitialParam";//初始化参数
-    public String UploadedParam = "UploadedParam";//已上传参数
-    public String RandomParam = "RandomParam";//随机参数
-    public String ServerParam = "ServerParam";//服务器获取参数
-    public String ResotreParam = "ResotreParam";//恢复的参数
+    private String InitialParam = "InitialParam";//初始化参数
+    private String UploadedParam = "UploadedParam";//已上传参数
+    private String RandomParam = "RandomParam";//随机参数
+    private String ServerParam = "ServerParam";//服务器获取参数
+    private String ResotreParam = "ResotreParam";//恢复的参数
     private boolean IMSIThreadGoOn = true;
-    public final int ExceptionAction = -1;
-    public final int GetParamAction = 0;//获取服务器参数
-    public final int ConfirmParamAction = 1;//确认服务器参数
-    public final int UploadRandomParamAction = 2;//上传随机参数
-    public final int GetRestoreParamAction = 3;//恢复指定参数
-    public final int ConfirmRestoreParamAction = 4;//确认恢复参数
-    public final int GetPhoneAction = 5;
-    public String IMEI = "";
-    public String MAC = "";
-    public String IMSI = "";
-    public String VERSION = "";
-    public String MANU = "";
-    public String MODEL = "";
-    public String ID = "";
-    public String GPS = "";
-    public String IP = "0.0.0.0";
-    public String PHONE = "13888888888";
-    public String TASKNAME = "";
-    public String DATE = "";
-    public String curParamStatus = InitialParam;//用于记录当前显示的参数是何种参数
+    private final int ExceptionAction = -1;
+    private final int GetParamAction = 0;//获取服务器参数
+    private final int ConfirmParamAction = 1;//确认服务器参数
+    private final int UploadRandomParamAction = 2;//上传随机参数
+    private final int GetRestoreParamAction = 3;//恢复指定参数
+    private final int ConfirmRestoreParamAction = 4;//确认恢复参数
+    private final int GetPhoneAction = 5;
+    private final int UpdateUIAction = 6;
+    private String IMEI = "";
+    private String MAC = "";
+    private String IMSI = "";
+    private String VERSION = "";
+    private String MANU = "";
+    private String MODEL = "";
+    private String ID = "";
+    private String GPS = "";
+    private String IP = "0.0.0.0";
+    private String PHONE = "13888888888";
+    private String TASKNAME = "";
+    private String DATE = "";
+    private String curParamStatus = InitialParam;//用于记录当前显示的参数是何种参数
     private boolean ISGetPhoneSuccess = false;
     private static int curID = 0;//当前选择的恢复参数的ID,如恢复参数 时返回3个参数，用户选择了第2个，则保存为1
 
@@ -114,16 +115,20 @@ public class Param extends ActionBarActivity {
                     Response confirmRestoreResponse = (Response)msg.obj;
                     Toast.makeText(getApplicationContext(), confirmRestoreResponse.getMSG(), Toast.LENGTH_LONG).show();
                     break;
+
                 case GetPhoneAction:
                     PhoneResponse phoneResponse = (PhoneResponse)msg.obj;
                     if(phoneResponse.getCode() == 0){
                         PHONE = phoneResponse.getPhone();
                         ISGetPhoneSuccess = true;
                         ConfigUtil.savePhone(PHONE);
-                        showParameter();
+                        showParameterWithoutTaskName();
                     }else{
                         Toast.makeText(getApplicationContext(), phoneResponse.getMsg(), Toast.LENGTH_LONG).show();
                     }
+                    break;
+                case UpdateUIAction:
+                    showParameterWithoutTaskName();
                     break;
                 case ExceptionAction:
                     Exception e = (Exception)msg.obj;
@@ -246,6 +251,7 @@ public class Param extends ActionBarActivity {
         Parameter parameter = RandomUtil.getRandomParameter();
         parameter.setIMSI(IMSI);
         parameter.setPHONE(PHONE);
+        parameter.setIP(IP);
         curParamStatus = RandomParam;
         showParameter(parameter);
 
@@ -302,6 +308,9 @@ public class Param extends ActionBarActivity {
         MAC = ConfigUtil.get("MAC");
         TelephonyManager tm = (TelephonyManager) getSystemService(this.TELEPHONY_SERVICE);
         IMSI = tm.getSubscriberId();
+        if(IMSI == null){
+            IMSI = "";
+        }
         VERSION = ConfigUtil.get("VERSION");
         MANU = ConfigUtil.get("MANU");
         MODEL = ConfigUtil.get("MODEL");
@@ -430,21 +439,22 @@ public class Param extends ActionBarActivity {
      *
      */
     public void showRestoreParameter(final RestoreResponse restoreResponse){
-        int size = restoreResponse.getParameterList().size();
-        final String[] parameters = new String[size];
+        final int size = restoreResponse.getParameterList().size();
+        final String[] parameters = new String[10];
 
         for(int i = 0; i < size;i++){
             RestoreParameter parameter = restoreResponse.getParameterList().get(i);
             parameters[i] = " ID:" + parameter.getId() +"IMEI:" + parameter.getIMEI()+" MAC:" + parameter.getMAC() ;
-
         }
         new AlertDialog.Builder(Param.this).setTitle("选择要还原参数").setItems(parameters, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 Toast.makeText(Param.this, "您已经选择了: " + which + ":" + parameters[which], Toast.LENGTH_LONG).show();
-                curID = restoreResponse.getParameterList().get(which).getId();//设置当前选择的恢复的结果的ID
-                curParamStatus = ResotreParam;//设置当前的参数类型为恢复结果类型
-                showParameter(restoreResponse.getParameterList().get(which));
-                dialog.dismiss();
+                if (which < size) {
+                    curID = restoreResponse.getParameterList().get(which).getId();//设置当前选择的恢复的结果的ID
+                    curParamStatus = ResotreParam;//设置当前的参数类型为恢复结果类型
+                    showParameter(restoreResponse.getParameterList().get(which));
+                    dialog.dismiss();
+                }
             }
         }).show();
     }
@@ -457,12 +467,8 @@ public class Param extends ActionBarActivity {
         MAC = response.getMAC();
         IMSI = response.getIMSI();
         VERSION = response.getVERSION();
-        if(response.getMODEL().split(" ").length<2){
-            MODEL = response.getMODEL();
-        }else {
-            MANU = response.getMODEL().split(" ")[0];
-            MODEL = response.getMODEL().split(" ")[1];
-        }
+        MANU = ConfigUtil.getManu(response.getMODEL());
+        MODEL = ConfigUtil.getModel(response.getMODEL());
         ID = response.getANDROIDID();
         GPS = response.getGPS();
         IP = response.getIP();
@@ -471,6 +477,21 @@ public class Param extends ActionBarActivity {
         showParameter();
     }
 
+
+    public void showParameterWithoutTaskName(){
+        String info = "";
+        info += "IMEI:"+ IMEI +"\n";
+        info += "MAC:"+ MAC +"\n";
+        info += "IMSI:"+ IMSI +"\n";
+        info += "VERSION:"+ VERSION +"\n";
+        info += "MANU:"+ MANU +"\n";
+        info += "MODEL:"+ MODEL +"\n";
+        info += "ID:"+ ID +"\n";
+        info += "GPS:"+ GPS +"\n";
+        info += "IP:"+ IP +"\n";
+        info += "PHONE:"+ PHONE;
+        showTextView.setText(info);
+    }
     /*
      * 显示参数信息
      */
@@ -563,6 +584,11 @@ public class Param extends ActionBarActivity {
      *该类线程是用于检测sim卡变动情况，如果sim卡变动，则进行网络请求获取到新的手机号码
      */
     class IMSICheckThread extends  Thread{
+        public void updateUI(){
+            Message msg = new Message();
+            msg.what = UpdateUIAction;
+            responseHandler.sendMessage(msg);
+        }
         @Override
         public void run() {
             while(IMSIThreadGoOn){
@@ -576,11 +602,13 @@ public class Param extends ActionBarActivity {
                     if(IMSI.equals("")){
                         PHONE = "";
                         IMSI = tmpIMSI;
-                        showParameter();
+                        ISGetPhoneSuccess = true;
                     }else{
                         getPhone(IMSI);
                     }
                 }
+                IP = getIp();
+                updateUI();
                 try {
                     sleep(1000);
                 } catch (InterruptedException e) {
